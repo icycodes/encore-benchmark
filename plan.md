@@ -140,7 +140,13 @@ To deploy an Encore app to Encore Cloud:
 3. Initialize an Encore app (example: TypeScript app named `helloworld`):
    1. Remove `encore.app` first if it already exists.
    2. `encore app init helloworld --lang ts`
-   3. Get the app ID from the command output. The app ID can also be read from `encore.app`.
+   3. Get the app ID from the command output. The app ID can also be read from `encore.app`, format:
+    ```encore.app
+    {
+      "id": "helloworld-f3z2",
+      "lang": "typescript",
+    }
+    ```
 4. Add the Encore Git remote:
    1. `git remote add encore encore://<app-id>`
 5. Push to the Encore remote and wait for deployment (this may take about 2 minutes).
