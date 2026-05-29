@@ -142,12 +142,12 @@ To deploy an Encore app to Encore Cloud:
   1. Remove `encore.app` first if it already exists.
   2. Run `encore app init helloworld --lang ts`.
   3. Get the app ID from the command output. The app ID can also be read from `encore.app`, in the following format:
-   ```encore.app
-   {
-    "id": "helloworld-f3z2",
-    "lang": "typescript",
-   }
-   ```
+    ```encore.app
+    {
+      "id": "helloworld-f3z2",
+      "lang": "typescript"
+    }
+    ```
   **NOTE:** If you need to extract the app ID with pytest code, use a regex instead of a JSON parser, because `encore.app` is not strict JSON.
   Example regex: `"id"\s*:\s*"([^\"]+)"` (capture group 1 is the app ID, e.g., `helloworld-f3z2`).
 4. Add the Encore Git remote:
@@ -156,8 +156,16 @@ To deploy an Encore app to Encore Cloud:
   1. Run `git push encore`.
 6. Access the deployed endpoint at: `https://staging-<app-id>.encr.app/`
 
+### Task Generation Rules
+
 **IMPORTANT:** When generating the `task.json`:
 1. Clearly state that the task executor is expected to deploy the app to Encore Cloud.
 2. The verifier should test only against the deployed endpoint.
 3. Ensure you include the usage of `ENCORE_AUTH_TOKEN_JSON` in the `Implementation Hints`.
 4. Add a simple guide to deploy an Encore app to Encore Cloud in the `Implementation Hints`.
+
+After executing `07_postgen_script.sh` and the `task.toml` is created, modify the `task.toml` to update the agent timeout from `600` to `1200`:
+```
+[agent]
+timeout_sec = 1200.0
+```
