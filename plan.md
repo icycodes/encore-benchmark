@@ -113,4 +113,38 @@ Encore automatically provisions databases when declared in code.
 
 ## Integration
 
-When generating a task that requires deployment to Encore Cloud, the `ENCORE_AUTH_KEY` environment variable will be provided in the task execution environment to authenticate the Encore CLI for Encore Cloud deployment.
+### Install Encore CLI
+
+1. Run `curl -L https://encore.dev/install.sh | bash`.
+2. Create a symlink for each binary in `~/.encore/bin` under `/usr/local/bin/`:
+   `ln -s ~/.encore/bin/encore /usr/local/bin/encore`
+   `ln -s ~/.encore/bin/git-remote-encore /usr/local/bin/git-remote-encore`
+   `ln -s ~/.encore/bin/tsbundler-encore /usr/local/bin/tsbundler-encore`
+   `ln -s ~/.encore/bin/tsparser-encore /usr/local/bin/tsparser-encore`
+3. Install `ssh`, which is required by `git-remote-encore`:
+   `apt-get update && apt-get install ssh -y`
+
+### Task Execution Environment
+
+Docker is NOT available in the task execution environment, even though some Encore commands require it.
+Commands such as `encore run` (which use Docker to start local databases) are NEVER available in this environment.
+The task executor must deploy the app to Encore Cloud for testing.
+
+To deploy an Encore app to Encore Cloud:
+
+1. Initialize a Git repository:
+   1. `git init`
+2. Authenticate Encore by writing the provided `ENCORE_AUTH_JSON` value to `~/.config/encore/.auth`, then verify:
+   1. `mkdir -p ~/.config/encore && printf '%s' "$ENCORE_AUTH_JSON" > ~/.config/encore/.auth_token`
+   2. `encore auth whoami`
+3. Initialize an Encore app (example: TypeScript app named `helloworld`):
+   1. Remove `encore.app` first if it already exists.
+   2. `encore app init helloworld --lang ts`
+   3. Get the app ID from the command output. The app ID can also be read from `encore.app`.
+4. Add the Encore Git remote:
+   1. `git remote add encore encore://<app-id>`
+5. Push to the Encore remote and wait for deployment (this may take about 2 minutes).
+   1. `git push encore`
+6. Access the deployed endpoint based on: `https://staging-<app-id>.encr.app/`
+
+**IMPORTANT**: When generating the task description, clearly state that the task executor is expected to deploy the app to Encore Cloud. The verifier should test only against the deployed endpoint.
