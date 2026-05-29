@@ -1,0 +1,37 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "7.4.4"
+        },
+        "summary": {
+            "tests": 1,
+            "passed": 0,
+            "failed": 1,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1780095055775,
+            "stop": 1780095056411
+        },
+        "environment": {
+            "buildName": "Pytest JSON CTRF Report",
+            "buildNumber": "000",
+            "buildUrl": "https://ctrf.io"
+        },
+        "tests": [
+            {
+                "name": "test_final_state.py::test_create_and_verify_book",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 557,
+                "start": 1780095055853,
+                "stop": 1780095056410,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "app_id = 'helloworld-93q2'\n\n    def test_create_and_verify_book(app_id):\n        base_url = f\"https://staging-{app_id}.encr.app\"\n    \n        # 1. Create Book\n        post_url = f\"{base_url}/books\"\n        post_data = {\"title\": \"The Hobbit\", \"author\": \"Tolkien\"}\n        post_response = requests.post(post_url, json=post_data)\n    \n>       assert post_response.status_code == 200, f\"POST /books failed with status {post_response.status_code}. Response: {post_response.text}\"\nE       AssertionError: POST /books failed with status 500. Response: Error: Encore application not found\nE       assert 500 == 200\nE        +  where 500 = <Response [500]>.status_code\n\ntests/test_final_state.py:26: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}
