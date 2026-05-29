@@ -145,11 +145,11 @@ To deploy an Encore app to Encore Cloud:
    ```encore.app
    {
     "id": "helloworld-f3z2",
-    "lang": "typescript"
+    "lang": "typescript",
    }
    ```
-   **NOTE:** Use a regex to extract the app ID, because `encore.app` is not strict JSON.
-   Example regex: `"id"\s*:\s*"([^"]+)"` (capture group 1 is the app ID, e.g., `helloworld-f3z2`).
+  **NOTE:** If you need to extract the app ID with pytest code, use a regex instead of a JSON parser, because `encore.app` is not strict JSON.
+  Example regex: `"id"\s*:\s*"([^\"]+)"` (capture group 1 is the app ID, e.g., `helloworld-f3z2`).
 4. Add the Encore Git remote:
   1. Run `git remote add encore encore://<app-id>`.
 5. Push to the Encore remote and wait for deployment (this may take about 2 minutes):
