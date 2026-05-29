@@ -130,29 +130,34 @@ Docker is NOT available in the task execution environment, even though some Enco
 Commands such as `encore run` (which use Docker to start local databases) are NEVER available in this environment.
 The task executor must deploy the app to Encore Cloud for testing.
 
+
 To deploy an Encore app to Encore Cloud:
 
 1. Initialize a Git repository:
-   1. `git init`
-2. Authenticate Encore by writing the provided `ENCORE_AUTH_JSON` value to `~/.config/encore/.auth`, then verify:
-   1. `mkdir -p ~/.config/encore && printf '%s' "$ENCORE_AUTH_JSON" > ~/.config/encore/.auth_token`
-   2. `encore auth whoami`
-3. Initialize an Encore app (example: TypeScript app named `helloworld`):
-   1. Remove `encore.app` first if it already exists.
-   2. `encore app init helloworld --lang ts`
-   3. Get the app ID from the command output. The app ID can also be read from `encore.app`, format:
-    ```encore.app
-    {
-      "id": "helloworld-f3z2",
-      "lang": "typescript",
-    }
-    ```
-    **NOTE:** Use a regex to extract the app ID, because `encore.app` is not strict JSON.
-    Example regex: `"id"\s*:\s*"([^"]+)"` (capture group 1 is the app ID, e.g., `helloworld-f3z2`).
+  1. Run `git init`.
+2. Authenticate Encore by writing the provided `ENCORE_AUTH_TOKEN_JSON` value to `~/.config/encore/.auth_token`, then verify:
+  1. Run `mkdir -p ~/.config/encore && printf '%s' "$ENCORE_AUTH_TOKEN_JSON" > ~/.config/encore/.auth_token`.
+  2. Run `encore auth whoami` to confirm authentication.
+3. Initialize an Encore app (example: a TypeScript app named `helloworld`):
+  1. Remove `encore.app` first if it already exists.
+  2. Run `encore app init helloworld --lang ts`.
+  3. Get the app ID from the command output. The app ID can also be read from `encore.app`, in the following format:
+   ```encore.app
+   {
+    "id": "helloworld-f3z2",
+    "lang": "typescript"
+   }
+   ```
+   **NOTE:** Use a regex to extract the app ID, because `encore.app` is not strict JSON.
+   Example regex: `"id"\s*:\s*"([^"]+)"` (capture group 1 is the app ID, e.g., `helloworld-f3z2`).
 4. Add the Encore Git remote:
-   1. `git remote add encore encore://<app-id>`
-5. Push to the Encore remote and wait for deployment (this may take about 2 minutes).
-   1. `git push encore`
-6. Access the deployed endpoint based on: `https://staging-<app-id>.encr.app/`
+  1. Run `git remote add encore encore://<app-id>`.
+5. Push to the Encore remote and wait for deployment (this may take about 2 minutes):
+  1. Run `git push encore`.
+6. Access the deployed endpoint at: `https://staging-<app-id>.encr.app/`
 
-**IMPORTANT**: When generating the task description, clearly state that the task executor is expected to deploy the app to Encore Cloud. The verifier should test only against the deployed endpoint.
+**IMPORTANT:** When generating the `task.json`:
+1. Clearly state that the task executor is expected to deploy the app to Encore Cloud.
+2. The verifier should test only against the deployed endpoint.
+3. Ensure you include the usage of `ENCORE_AUTH_TOKEN_JSON` in the `Implementation Hints`.
+4. Add a simple guide to deploy an Encore app to Encore Cloud in the `Implementation Hints`.
