@@ -1,0 +1,54 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0
+rootdir: /tests
+plugins: json-ctrf-0.5.0
+collected 3 items
+
+tests/test_final_state.py FFF                                            [100%]
+
+=================================== FAILURES ===================================
+_______________________________ test_create_user _______________________________
+
+base_url = 'https://staging-helloworld-m3gi.encr.app'
+pytestconfig = <_pytest.config.Config object at 0x713c0349dd90>
+
+    def test_create_user(base_url, pytestconfig):
+        response = requests.post(
+            f"{base_url}/users",
+            json={"name": "Alice", "email": "alice@example.com"}
+        )
+>       assert response.status_code in [200, 201], f"Expected status 200/201, got {response.status_code}. Response: {response.text}"
+E       AssertionError: Expected status 200/201, got 500. Response: Error: Encore application not found
+E       assert 500 in [200, 201]
+E        +  where 500 = <Response [500]>.status_code
+
+tests/test_final_state.py:29: AssertionError
+________________________________ test_get_user _________________________________
+
+base_url = 'https://staging-helloworld-m3gi.encr.app'
+pytestconfig = <_pytest.config.Config object at 0x713c0349dd90>
+
+    def test_get_user(base_url, pytestconfig):
+        created_id = pytestconfig.cache.get("created_id", None)
+>       assert created_id is not None, "created_id was not set by test_create_user"
+E       AssertionError: created_id was not set by test_create_user
+E       assert None is not None
+
+tests/test_final_state.py:41: AssertionError
+_______________________________ test_list_users ________________________________
+
+base_url = 'https://staging-helloworld-m3gi.encr.app'
+pytestconfig = <_pytest.config.Config object at 0x713c0349dd90>
+
+    def test_list_users(base_url, pytestconfig):
+        created_id = pytestconfig.cache.get("created_id", None)
+>       assert created_id is not None, "created_id was not set by test_create_user"
+E       AssertionError: created_id was not set by test_create_user
+E       assert None is not None
+
+tests/test_final_state.py:53: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_final_state.py::test_create_user - AssertionError: Expected...
+FAILED tests/test_final_state.py::test_get_user - AssertionError: created_id ...
+FAILED tests/test_final_state.py::test_list_users - AssertionError: created_i...
+============================== 3 failed in 0.67s ===============================

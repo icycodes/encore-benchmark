@@ -1,0 +1,61 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "7.4.4"
+        },
+        "summary": {
+            "tests": 3,
+            "passed": 0,
+            "failed": 3,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1780123786363,
+            "stop": 1780123786901
+        },
+        "environment": {
+            "buildName": "Pytest JSON CTRF Report",
+            "buildNumber": "000",
+            "buildUrl": "https://ctrf.io"
+        },
+        "tests": [
+            {
+                "name": "test_final_state.py::test_create_user",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 453,
+                "start": 1780123786441,
+                "stop": 1780123786894,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "base_url = 'https://staging-helloworld-imh2.encr.app'\npytestconfig = <_pytest.config.Config object at 0x7814093a5100>\n\n    def test_create_user(base_url, pytestconfig):\n        response = requests.post(\n            f\"{base_url}/users\",\n            json={\"name\": \"Alice\", \"email\": \"alice@example.com\"}\n        )\n>       assert response.status_code in [200, 201], f\"Expected status 200/201, got {response.status_code}. Response: {response.text}\"\nE       AssertionError: Expected status 200/201, got 500. Response: Error: Encore application not found\nE       assert 500 in [200, 201]\nE        +  where 500 = <Response [500]>.status_code\n\ntests/test_final_state.py:29: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_final_state.py::test_get_user",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 3,
+                "start": 1780123786894,
+                "stop": 1780123786897,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "base_url = 'https://staging-helloworld-imh2.encr.app'\npytestconfig = <_pytest.config.Config object at 0x7814093a5100>\n\n    def test_get_user(base_url, pytestconfig):\n        created_id = pytestconfig.cache.get(\"created_id\", None)\n>       assert created_id is not None, \"created_id was not set by test_create_user\"\nE       AssertionError: created_id was not set by test_create_user\nE       assert None is not None\n\ntests/test_final_state.py:41: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_final_state.py::test_list_users",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 4,
+                "start": 1780123786897,
+                "stop": 1780123786901,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "base_url = 'https://staging-helloworld-imh2.encr.app'\npytestconfig = <_pytest.config.Config object at 0x7814093a5100>\n\n    def test_list_users(base_url, pytestconfig):\n        created_id = pytestconfig.cache.get(\"created_id\", None)\n>       assert created_id is not None, \"created_id was not set by test_create_user\"\nE       AssertionError: created_id was not set by test_create_user\nE       assert None is not None\n\ntests/test_final_state.py:53: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}

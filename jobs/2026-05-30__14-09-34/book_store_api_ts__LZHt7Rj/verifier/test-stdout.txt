@@ -1,0 +1,26 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0
+rootdir: /tests
+plugins: json-ctrf-0.5.0
+collected 1 item
+
+tests/test_final_state.py F                                              [100%]
+
+=================================== FAILURES ===================================
+_________________________ test_bookstore_api_workflow __________________________
+
+base_url = 'https://staging-bookstore-mf5i.encr.app'
+
+    def test_bookstore_api_workflow(base_url):
+        # Step 3: Create Book
+        create_payload = {"title": "The Great Gatsby", "author": "F. Scott Fitzgerald"}
+        create_resp = requests.post(f"{base_url}/books", json=create_payload)
+>       assert create_resp.status_code == 200, f"Expected POST /books to return 200, got {create_resp.status_code}: {create_resp.text}"
+E       AssertionError: Expected POST /books to return 200, got 500: {"code":"internal","message":"an internal error occurred","details":null}
+E       assert 500 == 200
+E        +  where 500 = <Response [500]>.status_code
+
+tests/test_final_state.py:26: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_final_state.py::test_bookstore_api_workflow - AssertionErro...
+============================== 1 failed in 1.21s ===============================

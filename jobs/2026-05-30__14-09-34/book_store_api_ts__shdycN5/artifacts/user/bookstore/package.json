@@ -1,0 +1,12 @@
+{
+  "name": "bookstore",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "encore.dev": "^1.50.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  }
+}

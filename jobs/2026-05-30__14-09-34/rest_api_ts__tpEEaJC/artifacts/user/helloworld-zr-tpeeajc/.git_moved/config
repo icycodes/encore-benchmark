@@ -1,0 +1,12 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[remote "encore"]
+	url = encore://helloworld-zr-tpeeajc-gek2
+	fetch = +refs/heads/*:refs/remotes/encore/*
+[branch "master"]
+	remote = encore
+	merge = refs/heads/master
+	vscode-merge-base = encore/master

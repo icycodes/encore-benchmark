@@ -1,0 +1,37 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "7.4.4"
+        },
+        "summary": {
+            "tests": 1,
+            "passed": 0,
+            "failed": 1,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1780102603491,
+            "stop": 1780102603857
+        },
+        "environment": {
+            "buildName": "Pytest JSON CTRF Report",
+            "buildNumber": "000",
+            "buildUrl": "https://ctrf.io"
+        },
+        "tests": [
+            {
+                "name": "test_final_state.py::test_publish_and_retrieve_message",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 292,
+                "start": 1780102603565,
+                "stop": 1780102603857,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "app_url = 'https://staging-eda-app-49q2.encr.app'\n\n    def test_publish_and_retrieve_message(app_url):\n        # 1. Verify POST /publish\n        publish_url = f\"{app_url}/publish\"\n        test_message = \"hello harbor\"\n    \n        post_response = requests.post(publish_url, json={\"text\": test_message})\n>       assert post_response.status_code in (200, 201), \\\n            f\"POST /publish failed with status {post_response.status_code}: {post_response.text}\"\nE       AssertionError: POST /publish failed with status 500: Error: Encore application not found\nE       assert 500 in (200, 201)\nE        +  where 500 = <Response [500]>.status_code\n\ntests/test_final_state.py:29: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}

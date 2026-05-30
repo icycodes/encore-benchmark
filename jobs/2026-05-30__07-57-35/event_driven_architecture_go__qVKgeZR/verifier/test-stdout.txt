@@ -1,0 +1,49 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0
+rootdir: /tests
+plugins: json-ctrf-0.5.0
+collected 2 items
+
+tests/test_final_state.py FF                                             [100%]
+
+=================================== FAILURES ===================================
+_____________________________ test_publish_message _____________________________
+
+base_url = 'https://staging-eda-app-zr-qvkgezr-qppi.encr.app'
+run_id = 'zr-qvkgezr'
+
+    def test_publish_message(base_url, run_id):
+        message = f"test-message-{run_id}"
+        url = f"{base_url}/publish"
+        payload = {"message": message}
+    
+        response = requests.post(url, json=payload)
+>       assert response.status_code == 200, f"POST /publish failed with status {response.status_code}: {response.text}"
+E       AssertionError: POST /publish failed with status 500: Error: Encore application not found
+E       assert 500 == 200
+E        +  where 500 = <Response [500]>.status_code
+
+tests/test_final_state.py:37: AssertionError
+______________________________ test_get_messages _______________________________
+
+base_url = 'https://staging-eda-app-zr-qvkgezr-qppi.encr.app'
+run_id = 'zr-qvkgezr'
+
+    def test_get_messages(base_url, run_id):
+        # Wait for the Pub/Sub subscriber to process the message
+        time.sleep(5)
+    
+        message = f"test-message-{run_id}"
+        url = f"{base_url}/messages"
+    
+        response = requests.get(url)
+>       assert response.status_code == 200, f"GET /messages failed with status {response.status_code}: {response.text}"
+E       AssertionError: GET /messages failed with status 500: Error: Encore application not found
+E       assert 500 == 200
+E        +  where 500 = <Response [500]>.status_code
+
+tests/test_final_state.py:47: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_final_state.py::test_publish_message - AssertionError: POST...
+FAILED tests/test_final_state.py::test_get_messages - AssertionError: GET /me...
+============================== 2 failed in 5.92s ===============================

@@ -1,0 +1,113 @@
+{
+    "id": "47562460-cc6b-42a1-82df-f2da0db6197a",
+    "task_name": "url_shortener_ts",
+    "trial_name": "url_shortener_ts__mLythox",
+    "trial_uri": "file:///home/icy/github/benchmark-run/jobs/2026-05-30__14-09-34/url_shortener_ts__mLythox",
+    "task_id": {
+        "path": "/home/icy/github/benchmark-run/local-scripts/../tasks/url_shortener_ts"
+    },
+    "source": "tasks",
+    "task_checksum": "05216bef3cfe425beb19f8822a8c10e5539e62502facf3de76520dca28aa25c5",
+    "config": {
+        "task": {
+            "path": "/home/icy/github/benchmark-run/local-scripts/../tasks/url_shortener_ts",
+            "git_url": null,
+            "git_commit_id": null,
+            "name": null,
+            "ref": null,
+            "overwrite": false,
+            "download_dir": null,
+            "source": "tasks"
+        },
+        "trial_name": "url_shortener_ts__mLythox",
+        "trials_dir": "/home/icy/github/benchmark-run/local-scripts/../jobs/2026-05-30__14-09-34",
+        "timeout_multiplier": 1.0,
+        "agent_timeout_multiplier": null,
+        "verifier_timeout_multiplier": null,
+        "agent_setup_timeout_multiplier": null,
+        "environment_build_timeout_multiplier": null,
+        "agent": {
+            "name": null,
+            "import_path": "agents.pochi:Pochi",
+            "model_name": "zai/glm-5.1",
+            "skills": [],
+            "override_timeout_sec": null,
+            "override_setup_timeout_sec": null,
+            "max_timeout_sec": null,
+            "kwargs": {},
+            "env": {},
+            "mcp_servers": []
+        },
+        "environment": {
+            "type": "docker",
+            "import_path": null,
+            "force_build": false,
+            "delete": true,
+            "override_cpus": null,
+            "override_memory_mb": null,
+            "override_storage_mb": null,
+            "override_gpus": null,
+            "suppress_override_warnings": false,
+            "mounts": [
+                {
+                    "type": "bind",
+                    "source": "test_initial_state.py",
+                    "target": "/bootstrap/test_initial_state.py"
+                }
+            ],
+            "extra_docker_compose": [],
+            "env": {},
+            "kwargs": {}
+        },
+        "verifier": {
+            "override_timeout_sec": null,
+            "max_timeout_sec": null,
+            "env": {},
+            "disable": false
+        },
+        "artifacts": [
+            "/home/user"
+        ],
+        "extra_instruction_paths": [],
+        "job_id": "b4453005-0bc8-4fb8-a700-f7c9a906b308"
+    },
+    "agent_info": {
+        "name": "pochi",
+        "version": "0.6.12",
+        "model_info": {
+            "name": "glm-5.1",
+            "provider": "zai"
+        }
+    },
+    "agent_result": {
+        "n_input_tokens": null,
+        "n_cache_tokens": null,
+        "n_output_tokens": null,
+        "cost_usd": null,
+        "rollout_details": null,
+        "metadata": null
+    },
+    "verifier_result": null,
+    "exception_info": {
+        "exception_type": "InitialStateError",
+        "exception_message": "Initial state test failed",
+        "exception_traceback": "Traceback (most recent call last):\n  File \"/home/icy/github/benchmark-run/agents/pochi.py\", line 208, in run\n    await self.exec_as_agent(\n    ...<9 lines>...\n    )\n  File \"/home/icy/github/benchmark-run/.venv/lib/python3.14/site-packages/harbor/agents/installed/base.py\", line 354, in exec_as_agent\n    return await self._exec(\n           ^^^^^^^^^^^^^^^^^\n        environment, command, env=env, cwd=cwd, timeout_sec=timeout_sec\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/home/icy/github/benchmark-run/.venv/lib/python3.14/site-packages/harbor/agents/installed/base.py\", line 317, in _exec\n    raise NonZeroAgentExitCodeError(\n    ...<3 lines>...\n    )\nharbor.agents.installed.base.NonZeroAgentExitCodeError: Command failed (exit 1): if [ -f /bootstrap/test_initial_state.py ]; then pytest -s --log-cli-level=DEBUG /bootstrap/test_initial_state.py > >(tee /logs/agent/pochi/initial-test-stdout.txt) 2> >(tee /logs/agent/pochi/initial-test-stderr.txt >&2); fi\nstdout: ============================= test session starts ==============================\nplatform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0\nrootdir: /bootstrap\nplugins: json-ctrf-0.5.0\ncollected 2 items\n\nbootstrap/test_initial_state.py::test_encore_binary_available PASSED\nbootstrap/test_initial_state.py::test_project_directory_exists FAILED\n\n=================================== FAILURES ===================================\n________________________ test_project_directory_exists _________________________\n\n    def test_project_directory_exists():\n>       assert os.path.isdir(PROJECT_DIR), f\"Project directory {PROJECT_DIR} does not exist.\"\nE       AssertionError: Project directory /home/user/url-shortener does not exist.\nE       assert False\nE        +  where False = <function isdir at 0x7e19cc3142c0>('/home/user/url-shortener')\nE        +    where <function isdir at 0x7e19cc3142c0> = <module 'posixpath' (frozen)>.isdir\nE        +      where <module 'posixpath' (frozen)> = os.path\n\nbootstra ... [truncated]\nstderr: None\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/icy/github/benchmark-run/.venv/lib/python3.14/site-packages/harbor/trial/trial.py\", line 161, in run\n    await self._run()\n  File \"/home/icy/github/benchmark-run/.venv/lib/python3.14/site-packages/harbor/trial/single_step.py\", line 33, in _run\n    await self._run_agent()\n  File \"/home/icy/github/benchmark-run/.venv/lib/python3.14/site-packages/harbor/trial/single_step.py\", line 63, in _run_agent\n    await self._run_agent_phase(\n    ...<4 lines>...\n    )\n  File \"/home/icy/github/benchmark-run/.venv/lib/python3.14/site-packages/harbor/trial/trial.py\", line 238, in _run_agent_phase\n    await asyncio.wait_for(\n    ...<6 lines>...\n    )\n  File \"/usr/lib/python3.14/asyncio/tasks.py\", line 488, in wait_for\n    return await fut\n           ^^^^^^^^^\n  File \"/home/icy/github/benchmark-run/.venv/lib/python3.14/site-packages/harbor/agents/installed/base.py\", line 39, in wrapper\n    return await fn(self, instruction, *args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/icy/github/benchmark-run/agents/pochi.py\", line 220, in run\n    raise InitialStateError(\"Initial state test failed\") from e\nagents.pochi.InitialStateError: Initial state test failed\n",
+        "occurred_at": "2026-05-30T14:24:51.210896"
+    },
+    "started_at": "2026-05-30T06:23:45.071359Z",
+    "finished_at": "2026-05-30T06:25:07.572138Z",
+    "environment_setup": {
+        "started_at": "2026-05-30T06:23:45.191727Z",
+        "finished_at": "2026-05-30T06:24:29.302756Z"
+    },
+    "agent_setup": {
+        "started_at": "2026-05-30T06:24:29.302805Z",
+        "finished_at": "2026-05-30T06:24:49.716234Z"
+    },
+    "agent_execution": {
+        "started_at": "2026-05-30T06:24:49.716307Z",
+        "finished_at": "2026-05-30T06:24:50.455898Z"
+    },
+    "verifier": null,
+    "step_results": null
+}

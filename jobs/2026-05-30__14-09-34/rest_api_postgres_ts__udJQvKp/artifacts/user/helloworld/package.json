@@ -1,0 +1,12 @@
+{
+  "name": "helloworld",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "encore run",
+    "test": "encore test"
+  },
+  "dependencies": {
+    "encore.dev": "^1.0.0"
+  }
+}

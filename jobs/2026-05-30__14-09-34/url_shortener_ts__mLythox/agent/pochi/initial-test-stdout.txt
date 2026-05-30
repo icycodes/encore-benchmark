@@ -1,0 +1,24 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0
+rootdir: /bootstrap
+plugins: json-ctrf-0.5.0
+collected 2 items
+
+bootstrap/test_initial_state.py::test_encore_binary_available PASSED
+bootstrap/test_initial_state.py::test_project_directory_exists FAILED
+
+=================================== FAILURES ===================================
+________________________ test_project_directory_exists _________________________
+
+    def test_project_directory_exists():
+>       assert os.path.isdir(PROJECT_DIR), f"Project directory {PROJECT_DIR} does not exist."
+E       AssertionError: Project directory /home/user/url-shortener does not exist.
+E       assert False
+E        +  where False = <function isdir at 0x7e19cc3142c0>('/home/user/url-shortener')
+E        +    where <function isdir at 0x7e19cc3142c0> = <module 'posixpath' (frozen)>.isdir
+E        +      where <module 'posixpath' (frozen)> = os.path
+
+bootstrap/test_initial_state.py:11: AssertionError
+=========================== short test summary info ============================
+FAILED bootstrap/test_initial_state.py::test_project_directory_exists - Asser...
+========================= 1 failed, 1 passed in 0.01s ==========================

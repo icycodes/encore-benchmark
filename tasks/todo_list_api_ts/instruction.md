@@ -1,0 +1,36 @@
+# Todo List API with Encore.ts and PostgreSQL
+
+## Background
+Create a REST API for managing a Todo list using Encore.ts and its built-in PostgreSQL database support. Deploy the API to Encore Cloud.
+
+## Requirements
+- Implement an Encore.ts service with a PostgreSQL database named `todos`.
+- The database schema must include a table for todos with at least `id`, `title` (text), and `done` (boolean).
+- Implement the following RESTful API endpoints:
+  - POST `/todos`: Create a new todo.
+  - GET `/todos`: List all todos.
+  - PUT `/todos/:id`: Update a todo's `title` and/or `done` status.
+  - DELETE `/todos/:id`: Delete a todo by ID.
+- Deploy the application to Encore Cloud.
+
+## Implementation Hints
+- Use `encore.dev/storage/sqldb` to define the PostgreSQL database.
+- Use `encore.dev/api` to define the endpoints.
+- To deploy an Encore app to Encore Cloud:
+  1. Initialize a Git repository: `git init`.
+  2. Authenticate Encore by writing the provided `ENCORE_AUTH_TOKEN_JSON` value to `~/.config/encore/.auth_token`, then verify with `encore auth whoami`.
+  3. Initialize an Encore app: `encore app init mytodo --lang ts` (remove `encore.app` first if it already exists).
+  4. Add the Encore Git remote: `git remote add encore encore://<app-id>` (extract `<app-id>` from `encore.app`).
+  5. Push to the Encore remote and wait for deployment: `git push encore`.
+- Docker is NOT available in the task execution environment, so you cannot run `encore run` locally. You must deploy to Encore Cloud and test against the deployed endpoint.
+
+## Acceptance Criteria
+- Project path: /home/user/mytodo
+- Ensure the app is deployed to Encore Cloud and the real action is executed.
+- The `encore.app` file must exist in the project directory and contain the app ID.
+- API Endpoints (accessible at `https://staging-<app-id>.encr.app`):
+  - POST `/todos`: Accepts JSON `{"title": string, "done": boolean}` and returns 200/201 with the created todo object (including an `id`).
+  - GET `/todos`: Returns 200 with a JSON array of todo objects.
+  - PUT `/todos/:id`: Accepts JSON `{"title": string, "done": boolean}` and returns 200.
+  - DELETE `/todos/:id`: Deletes the todo with the given ID and returns 200.
+
