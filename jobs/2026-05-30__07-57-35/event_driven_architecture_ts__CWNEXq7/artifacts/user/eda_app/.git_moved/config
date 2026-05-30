@@ -1,0 +1,11 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[user]
+	email = dev@example.com
+	name = Developer
+[remote "encore"]
+	url = encore://eda-app-49q2
+	fetch = +refs/heads/*:refs/remotes/encore/*

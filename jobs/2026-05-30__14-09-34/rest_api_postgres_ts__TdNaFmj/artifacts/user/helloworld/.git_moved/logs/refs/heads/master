@@ -1,0 +1,2 @@
+0000000000000000000000000000000000000000 ca0a1f2d9cce9ba93c6d6e64f0fcdc3862b131c7 Pochi <noreply@getpochi.com> 1780123430 +0000	commit (initial): Initial commit: REST API with PostgreSQL for user management
+ca0a1f2d9cce9ba93c6d6e64f0fcdc3862b131c7 6ae4b625cf253bc6d7ce43229c928948511b727d Pochi <noreply@getpochi.com> 1780123887 +0000	commit: Add .gitignore and remove node_modules from tracking

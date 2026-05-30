@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.env
+encore.gen.go
+encore.gen.cue
+/.encore
+/encore.gen

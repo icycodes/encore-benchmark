@@ -1,0 +1,39 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0
+rootdir: /tests
+plugins: json-ctrf-0.5.0
+collected 2 items
+
+tests/test_final_state.py EE                                             [100%]
+
+==================================== ERRORS ====================================
+____________________ ERROR at setup of test_publish_message ____________________
+
+    @pytest.fixture(scope="session")
+    def app_id():
+        encore_app_path = os.path.join(PROJECT_DIR, "encore.app")
+>       assert os.path.isfile(encore_app_path), f"encore.app not found at {encore_app_path}"
+E       AssertionError: encore.app not found at /home/user/eda-app/encore.app
+E       assert False
+E        +  where False = <function isfile at 0x77b981474220>('/home/user/eda-app/encore.app')
+E        +    where <function isfile at 0x77b981474220> = <module 'posixpath' (frozen)>.isfile
+E        +      where <module 'posixpath' (frozen)> = os.path
+
+tests/test_final_state.py:12: AssertionError
+_____________________ ERROR at setup of test_get_messages ______________________
+
+    @pytest.fixture(scope="session")
+    def app_id():
+        encore_app_path = os.path.join(PROJECT_DIR, "encore.app")
+>       assert os.path.isfile(encore_app_path), f"encore.app not found at {encore_app_path}"
+E       AssertionError: encore.app not found at /home/user/eda-app/encore.app
+E       assert False
+E        +  where False = <function isfile at 0x77b981474220>('/home/user/eda-app/encore.app')
+E        +    where <function isfile at 0x77b981474220> = <module 'posixpath' (frozen)>.isfile
+E        +      where <module 'posixpath' (frozen)> = os.path
+
+tests/test_final_state.py:12: AssertionError
+=========================== short test summary info ============================
+ERROR tests/test_final_state.py::test_publish_message - AssertionError: encor...
+ERROR tests/test_final_state.py::test_get_messages - AssertionError: encore.a...
+============================== 2 errors in 0.10s ===============================

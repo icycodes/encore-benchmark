@@ -1,0 +1,35 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "7.4.4"
+        },
+        "summary": {
+            "tests": 1,
+            "passed": 0,
+            "failed": 1,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1780123335552,
+            "stop": 1780123335648
+        },
+        "environment": {
+            "buildName": "Pytest JSON CTRF Report",
+            "buildNumber": "000",
+            "buildUrl": "https://ctrf.io"
+        },
+        "tests": [
+            {
+                "name": "test_final_state.py::test_todo_crud_flow",
+                "status": "failed",
+                "duration": 17,
+                "start": 1780123335630,
+                "stop": 1780123335647,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "@pytest.fixture(scope=\"session\")\n    def base_url():\n>       assert os.path.isfile(ENCORE_APP_FILE), f\"encore.app file not found at {ENCORE_APP_FILE}. Ensure the app was initialized.\"\nE       AssertionError: encore.app file not found at /home/user/mytodo/encore.app. Ensure the app was initialized.\nE       assert False\nE        +  where False = <function isfile at 0x7d2c251c0220>('/home/user/mytodo/encore.app')\nE        +    where <function isfile at 0x7d2c251c0220> = <module 'posixpath' (frozen)>.isfile\nE        +      where <module 'posixpath' (frozen)> = os.path\n\ntests/test_final_state.py:11: AssertionError"
+            }
+        ]
+    }
+}

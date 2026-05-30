@@ -1,0 +1,12 @@
+{
+  "name": "eda-app",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "encore run",
+    "build": "encore build"
+  },
+  "dependencies": {
+    "encore.dev": "^1.57.5"
+  }
+}
