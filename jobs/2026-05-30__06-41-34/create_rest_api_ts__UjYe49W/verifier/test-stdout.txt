@@ -1,0 +1,44 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0
+rootdir: /tests
+plugins: json-ctrf-0.5.0
+collected 1 item
+
+tests/test_final_state.py F                                              [100%]
+
+=================================== FAILURES ===================================
+_________________________ test_create_and_verify_book __________________________
+
+app_id = 'helloworld-gsw2'
+
+    def test_create_and_verify_book(app_id):
+        base_url = f"https://staging-{app_id}.encr.app"
+    
+        # 1. Create Book
+        post_url = f"{base_url}/books"
+        post_data = {"title": "The Hobbit", "author": "Tolkien"}
+        post_response = requests.post(post_url, json=post_data)
+    
+        assert post_response.status_code == 200, f"POST /books failed with status {post_response.status_code}. Response: {post_response.text}"
+        post_json = post_response.json()
+        assert "id" in post_json, f"Response missing 'id' field: {post_json}"
+        assert post_json.get("title") == "The Hobbit", f"Expected title 'The Hobbit', got: {post_json.get('title')}"
+        assert post_json.get("author") == "Tolkien", f"Expected author 'Tolkien', got: {post_json.get('author')}"
+    
+        created_id = post_json["id"]
+    
+        # 2. List Books
+        get_url = f"{base_url}/books"
+        get_response = requests.get(get_url)
+        assert get_response.status_code == 200, f"GET /books failed with status {get_response.status_code}. Response: {get_response.text}"
+        get_json = get_response.json()
+    
+>       assert isinstance(get_json, list), f"Expected GET /books to return a list, got: {type(get_json)}"
+E       AssertionError: Expected GET /books to return a list, got: <class 'dict'>
+E       assert False
+E        +  where False = isinstance({'books': [{'author': 'Tolkien', 'id': 1, 'title': 'The Hobbit'}]}, list)
+
+tests/test_final_state.py:40: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_final_state.py::test_create_and_verify_book - AssertionErro...
+============================== 1 failed in 1.60s ===============================

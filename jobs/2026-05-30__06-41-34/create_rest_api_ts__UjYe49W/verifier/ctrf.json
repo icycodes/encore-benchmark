@@ -1,0 +1,37 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "7.4.4"
+        },
+        "summary": {
+            "tests": 1,
+            "passed": 0,
+            "failed": 1,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1780095899534,
+            "stop": 1780095901135
+        },
+        "environment": {
+            "buildName": "Pytest JSON CTRF Report",
+            "buildNumber": "000",
+            "buildUrl": "https://ctrf.io"
+        },
+        "tests": [
+            {
+                "name": "test_final_state.py::test_create_and_verify_book",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 1524,
+                "start": 1780095899611,
+                "stop": 1780095901135,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "app_id = 'helloworld-gsw2'\n\n    def test_create_and_verify_book(app_id):\n        base_url = f\"https://staging-{app_id}.encr.app\"\n    \n        # 1. Create Book\n        post_url = f\"{base_url}/books\"\n        post_data = {\"title\": \"The Hobbit\", \"author\": \"Tolkien\"}\n        post_response = requests.post(post_url, json=post_data)\n    \n        assert post_response.status_code == 200, f\"POST /books failed with status {post_response.status_code}. Response: {post_response.text}\"\n        post_json = post_response.json()\n        assert \"id\" in post_json, f\"Response missing 'id' field: {post_json}\"\n        assert post_json.get(\"title\") == \"The Hobbit\", f\"Expected title 'The Hobbit', got: {post_json.get('title')}\"\n        assert post_json.get(\"author\") == \"Tolkien\", f\"Expected author 'Tolkien', got: {post_json.get('author')}\"\n    \n        created_id = post_json[\"id\"]\n    \n        # 2. List Books\n        get_url = f\"{base_url}/books\"\n        get_response = requests.get(get_url)\n        assert get_response.status_code == 200, f\"GET /books failed with status {get_response.status_code}. Response: {get_response.text}\"\n        get_json = get_response.json()\n    \n>       assert isinstance(get_json, list), f\"Expected GET /books to return a list, got: {type(get_json)}\"\nE       AssertionError: Expected GET /books to return a list, got: <class 'dict'>\nE       assert False\nE        +  where False = isinstance({'books': [{'author': 'Tolkien', 'id': 1, 'title': 'The Hobbit'}]}, list)\n\ntests/test_final_state.py:40: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}
