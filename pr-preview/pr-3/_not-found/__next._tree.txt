@@ -1,0 +1,2 @@
+:HL["/encore-benchmark/pr-preview/pr-3/_next/static/chunks/03f40b0c251b70ce.css","style"]
+0:{"buildId":"d6NjAWQg8QanFpCzOvL2l","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"/_not-found","paramType":null,"paramKey":"/_not-found","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":true},"staleTime":300}

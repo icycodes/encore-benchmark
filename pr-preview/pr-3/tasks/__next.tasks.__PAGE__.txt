@@ -1,0 +1,904 @@
+1:"$Sreact.fragment"
+2:"$Sreact.suspense"
+3:I[42654,["/encore-benchmark/pr-preview/pr-3/_next/static/chunks/babff0e7418ab052.js","/encore-benchmark/pr-preview/pr-3/_next/static/chunks/3ecbb78a8ff87549.js","/encore-benchmark/pr-preview/pr-3/_next/static/chunks/3d160a83c03a9356.js","/encore-benchmark/pr-preview/pr-3/_next/static/chunks/f9f579c42c486944.js"],"TasksPageClient"]
+1e:I[75049,["/encore-benchmark/pr-preview/pr-3/_next/static/chunks/d2c13bb33c4fcd54.js","/encore-benchmark/pr-preview/pr-3/_next/static/chunks/c21188132e0e0d48.js"],"OutletBoundary"]
+4:T83f,# Book Store REST API with Encore.ts
+
+## Background
+Create a REST API for managing a list of books using Encore.ts and a PostgreSQL database, then deploy it to Encore Cloud.
+
+## Requirements
+- Implement a RESTful API with the following endpoints in a `books` service:
+  - `POST /books`: Add a new book (fields: `title`, `author`).
+  - `GET /books`: List all books.
+  - `DELETE /books/:id`: Remove a book by ID.
+- Store data in an Encore PostgreSQL database named `bookstore`.
+- Deploy the app to Encore Cloud.
+
+## Implementation Hints
+- Use `encore.dev/api` to define API endpoints and `encore.dev/storage/sqldb` to define the database.
+- Write database migrations in a `migrations` folder (e.g. `1_create_books_table.up.sql`) to create a `books` table with `id` (serial/auto-increment), `title` (text), and `author` (text).
+- Since Docker is not available in the execution environment, you cannot use `encore run` to test locally. You must deploy to Encore Cloud to verify your code.
+- **Encore Cloud Deployment Guide**:
+  1. Initialize a Git repository with `git init`.
+  2. Authenticate Encore by writing the `ENCORE_AUTH_TOKEN_JSON` environment variable value to `~/.config/encore/.auth_token`.
+  3. Run `encore auth whoami` to confirm authentication.
+  4. Initialize the Encore app using `encore app init bookstore --lang ts` (remove `encore.app` first if it exists).
+  5. Add the Git remote: `git remote add encore encore://<app-id>`.
+  6. Commit your code and push: `git push encore`.
+  7. The deployed app will be accessible at `https://staging-<app-id>.encr.app/`.
+
+## Acceptance Criteria
+- Project path: `/home/user/bookstore`
+- Ensure the app is successfully deployed to Encore Cloud.
+- The `encore.app` file must exist in the project directory and contain the valid app ID.
+- API Endpoints (deployed at `https://staging-<app-id>.encr.app/`):
+  - `POST /books`: Accepts a JSON body with `title` and `author`, returns 200 OK with the created book object (including `id`).
+  - `GET /books`: Returns 200 OK and a JSON array of book objects.
+  - `DELETE /books/:id`: Deletes the book and returns 200 OK.
+5:T98b,# Create a GraphQL API with Encore.ts
+
+## Background
+Encore is a backend framework for building type-safe distributed systems. In this task, you will create a simple GraphQL API using Encore.ts and deploy it to Encore Cloud.
+
+## Requirements
+- Initialize a new Encore TypeScript application named `graphql-api`.
+- Create a service that exposes a GraphQL endpoint at `/graphql`.
+- The GraphQL schema must define a Query `hello(name: String): String!`.
+- The `hello` query should return `Hello, <name>!` if a name is provided, or `Hello, World!` if no name is provided.
+- The GraphQL endpoint must accept POST requests with standard GraphQL JSON payloads.
+- Deploy the application to Encore Cloud.
+
+## Implementation Hints
+- Use `encore app init graphql-api --lang ts` to create the application (remove the `encore.app` file if it already exists before running this command).
+- You can use any GraphQL library (e.g., `graphql`, `@apollo/server`, `graphql-yoga`) to handle the schema and execution.
+- In Encore.ts, use a **raw endpoint** (e.g., `api.raw(...)`) to handle the incoming HTTP request and pass it to your GraphQL execution logic.
+- The task executor is expected to deploy the app to Encore Cloud. Docker is NOT available in the task execution environment.
+- To deploy to Encore Cloud:
+  1. Initialize a Git repository with `git init`.
+  2. Authenticate Encore by writing the provided `ENCORE_AUTH_TOKEN_JSON` value to `~/.config/encore/.auth_token`: `mkdir -p ~/.config/encore && printf '%s' "$ENCORE_AUTH_TOKEN_JSON" > ~/.config/encore/.auth_token`.
+  3. Run `encore auth whoami` to confirm authentication.
+  4. Read the app ID from the `encore.app` file (e.g., `graphql-api-xxxx`).
+  5. Add the Encore Git remote: `git remote add encore encore://<app-id>`.
+  6. Commit your code and push to the Encore remote: `git push encore`.
+  7. Wait for the deployment to finish.
+
+## Acceptance Criteria
+- Project path: /home/user/graphql-api
+- Ensure the application is successfully deployed to Encore Cloud.
+- The verifier will test against the deployed endpoint at `https://staging-<app-id>.encr.app/graphql`.
+- The endpoint must accept POST requests with a JSON body containing a GraphQL query.
+- Request: `{"query": "query { hello }"}` -> Response JSON must contain `{"data": {"hello": "Hello, World!"}}`.
+- Request: `{"query": "query { hello(name: \"Encore\") }"}` -> Response JSON must contain `{"data": {"hello": "Hello, Encore!"}}`.
+
+6:T726,# Create a Hello World API in Go with Encore
+
+## Background
+Encore is an open-source backend framework for building type-safe distributed systems. Create a simple Hello World API using Encore's Go SDK and deploy it to Encore Cloud.
+
+## Requirements
+- Initialize a new Encore app in Go.
+- The app name must be `helloworld-${run-id}`.
+- Create a service named `hello` with an API endpoint `World` that responds to `GET /hello/:name`.
+- The endpoint should return a JSON response containing a greeting message, e.g., `Hello, <name>!`.
+- Deploy the application to Encore Cloud.
+
+## Implementation Hints
+- Read the current `run-id` from the `ZEALT_RUN_ID` environment variable.
+- Authenticate with Encore using the provided token: `mkdir -p ~/.config/encore && printf '%s' "$ENCORE_AUTH_TOKEN_JSON" > ~/.config/encore/.auth_token`.
+- Initialize the app using `encore app init helloworld-${run-id} --lang go`.
+- Define the API endpoint using the `//encore:api` annotation above a standard Go function.
+- Since Docker is NOT available in this environment, you cannot use `encore run` to test locally. You must deploy the app to Encore Cloud for testing.
+- To deploy to Encore Cloud:
+  1. Initialize a git repository: `git init`
+  2. Find the app ID in the `encore.app` file.
+  3. Add the Encore git remote: `git remote add encore encore://<app-id>`
+  4. Commit your code and push to the Encore remote: `git push encore`
+  5. Wait for the deployment to finish.
+
+## Acceptance Criteria
+- Project path: /home/user/helloworld-${run-id}
+- Ensure the real app creation and deployment action is executed.
+- The app must be deployed to Encore Cloud.
+- The deployed API endpoint must be accessible at `https://staging-<app-id>.encr.app/hello/:name`.
+- The API must return a JSON response with the greeting, e.g., `{"Message": "Hello, world!"}`.
+
+7:T857,# Create and Deploy a Hello World API with Encore.ts
+
+## Background
+Encore is a backend framework for building type-safe distributed systems. It automatically provisions infrastructure and provides an integrated cloud platform. In this task, you will create a simple Hello World API using Encore.ts and deploy it to Encore Cloud.
+
+## Requirements
+- Create an Encore.ts application.
+- The application name should be `hello-${run-id}` where `${run-id}` is read from the `ZEALT_RUN_ID` environment variable.
+- Implement a single REST API endpoint `GET /hello/:name` that returns `{ "message": "Hello <name>!" }`.
+- Deploy the application to Encore Cloud.
+- Write the deployed app's base URL to a log file after a successful deployment.
+
+## Implementation Hints
+- Docker is NOT available in this environment. You CANNOT use `encore run` to test locally. You must deploy the app to Encore Cloud for testing.
+- Authenticate Encore by writing the provided `ENCORE_AUTH_TOKEN_JSON` value to `~/.config/encore/.auth_token`, then verify with `encore auth whoami`.
+- Initialize the app using `encore app init hello-${run-id} --lang ts` and ensure the code is located in `/home/user/myproject`.
+- The app ID can be extracted from the `encore.app` file (e.g., using a regex like `"id"\s*:\s*"([^"]+)"`).
+- To deploy: initialize a git repository in the app directory, commit your code, add the Encore git remote (`git remote add encore encore://<app-id>`), and push (`git push encore`).
+- The deployment may take about 2 minutes.
+- Once deployed, the endpoint will be accessible at `https://staging-<app-id>.encr.app/`.
+- Write the base URL to `/home/user/myproject/output.log`.
+
+## Acceptance Criteria
+- Project path: /home/user/myproject
+- Ensure the real deployment action is executed and the log artifact exists.
+- Log file: /home/user/myproject/output.log
+- The log file must contain the base URL in the format: `Base URL: https://staging-<app-id>.encr.app`.
+- API Endpoints:
+  - GET `/hello/:name`: Returns status 200 and a JSON object with a `message` field.
+
+    ```json
+    // Response
+    {
+      "message": "Hello <name>!"
+    }
+    ```
+
+8:T8d8,# Create a REST API with Encore for Go
+
+## Background
+Create a simple REST API for managing a list of books using Encore for Go and its built-in PostgreSQL database provisioning, then deploy it to Encore Cloud.
+
+## Requirements
+- Create a new Encore application.
+- The application name must be `books-api-${run-id}`.
+- Implement a RESTful API with the following endpoints:
+  - GET `/books`: List all books.
+  - POST `/books`: Add a new book (fields: `title`, `author`).
+- Store data in a PostgreSQL database using Encore's `sqldb` package.
+- Deploy the application to Encore Cloud.
+- Save the Encore App ID to a log file after deployment.
+
+## Implementation Hints
+- Read the `run-id` from the `ZEALT_RUN_ID` environment variable.
+- To deploy an Encore app to Encore Cloud:
+  1. Initialize a Git repository with `git init`.
+  2. Authenticate Encore by writing the provided `ENCORE_AUTH_TOKEN_JSON` value to `~/.config/encore/.auth_token`: `mkdir -p ~/.config/encore && printf '%s' "$ENCORE_AUTH_TOKEN_JSON" > ~/.config/encore/.auth_token`.
+  3. Run `encore auth whoami` to confirm authentication.
+  4. Initialize the app using `encore app init books-api-${run-id} --lang go`.
+  5. Add the Encore Git remote: `git remote add encore encore://<app-id>`.
+  6. Commit your code and push to the Encore remote: `git push encore`.
+  7. The deployed endpoint will be available at `https://staging-<app-id>.encr.app/`.
+- Use `encore.dev/storage/sqldb` to define the database and create a migration file (e.g., `1_create_tables.up.sql`) to create the `books` table.
+- Write the App ID to `/home/user/myproject/output.log`.
+
+## Acceptance Criteria
+- Project path: /home/user/myproject
+- Ensure the application is deployed to Encore Cloud and the log artifact exists.
+- Log file: /home/user/myproject/output.log
+- The log file must contain the App ID in the format: `App ID: <app-id>`.
+- The deployed API must be accessible at `https://staging-<app-id>.encr.app/`.
+- The API must support POST `/books` to create a book and GET `/books` to list books.
+  - POST `/books` Request: `{"title": string, "author": string}`
+  - POST `/books` Response: `{"id": number, "title": string, "author": string}`
+  - GET `/books` Response: `[{"id": number, "title": string, "author": string}]`
+
+9:Ta9a,# Encore REST API with PostgreSQL
+
+## Background
+Create a simple REST API for managing a list of books using Encore.ts and its built-in PostgreSQL database support. Encore automatically provisions the database when declared in code.
+
+## Requirements
+- Create an Encore.ts application named `helloworld`.
+- Implement a RESTful API with the following endpoints:
+  - GET `/books`: List all books.
+  - POST `/books`: Add a new book (fields: `title`, `author`).
+  - DELETE `/books/:id`: Remove a book by ID.
+- Store data in a PostgreSQL database managed by Encore.
+- Deploy the application to Encore Cloud.
+- Write the app ID to `app_id.txt` after deployment.
+
+## Implementation Hints
+- The task execution environment does NOT have Docker available, so you cannot run `encore run` locally. You must deploy the app to Encore Cloud for testing.
+- Use `SQLDatabase` from `encore.dev/storage/sqldb` to define the database.
+- Write SQL migrations in the `migrations` directory to create the `books` table.
+- To deploy to Encore Cloud:
+  1. Initialize a Git repository with `git init`.
+  2. Authenticate Encore by writing the provided `ENCORE_AUTH_TOKEN_JSON` value to `~/.config/encore/.auth_token` (e.g., `mkdir -p ~/.config/encore && printf '%s' "$ENCORE_AUTH_TOKEN_JSON" > ~/.config/encore/.auth_token`), then verify with `encore auth whoami`.
+  3. Initialize the Encore app with `encore app init helloworld --lang ts`.
+  4. Get the app ID from the output or `encore.app` file.
+  5. Add the Encore Git remote: `git remote add encore encore://<app-id>`.
+  6. Commit your code and push: `git push encore`.
+  7. The deployment may take about 2 minutes. The deployed endpoint will be `https://staging-<app-id>.encr.app/`.
+- Write the app ID to `/home/user/helloworld/app_id.txt` in the format `App ID: <app_id>`.
+
+## Acceptance Criteria
+- Project path: /home/user/helloworld
+- Ensure the app is deployed to Encore Cloud and the log artifact exists.
+- Log file: /home/user/helloworld/app_id.txt
+- The log file must contain the app ID in the format: `App ID: <app_id>`.
+- API Endpoints (accessed via `https://staging-<app_id>.encr.app/`):
+  - GET `/books`: Returns status 200 and a JSON array of book objects.
+
+    ```json
+    // Response
+    [
+      {
+        "id": number,
+        "title": string,
+        "author": string
+      }
+    ]
+    ```
+
+  - POST `/books`: Accepts book object JSON and returns 200 OK with the new book object.
+
+    ```json
+    // Request
+    {
+      "title": string,
+      "author": string
+    }
+    ```
+    ```json
+    // Response
+    {
+      "id": number,
+      "title": string,
+      "author": string
+    }
+    ```
+
+  - DELETE `/books/:id`: Deletes the book with the given ID and returns 200 OK.
+
+a:Ta5f,# Cron Job Cleanup in Encore.go
+
+## Background
+Create an Encore.go application that sets up a PostgreSQL database and a Cron Job to periodically clean up stale database records.
+
+## Requirements
+- Create an Encore application with a `cleanup` service.
+- Define a PostgreSQL database named `cleanup_db` using `encore.dev/storage/sqldb`.
+- Create a database migration to define a `records` table with `id` (text), `data` (text), and `created_at` (timestamp) columns.
+- Expose a public API endpoint `POST /records` to insert a new record. It must accept `id`, `data`, and `created_at` in the request body to allow inserting historical records for testing.
+- Expose a public API endpoint `GET /records` to list all records.
+- Define an Encore Cron Job that runs periodically (e.g., every 1 hour) to delete records older than 24 hours.
+- The Cron Job must call a public API endpoint `POST /cleanup` which contains the actual deletion logic. (Making it public allows manual triggering for verification).
+
+## Implementation Hints
+- Use `sqldb.NewDatabase` to define the database and point to the `migrations` directory.
+- Use `cron.NewJob` from `encore.dev/cron` to define the Cron Job schedule and point it to the `POST /cleanup` API endpoint.
+- The `POST /cleanup` API endpoint should execute a `DELETE` SQL query to remove records where `created_at` is older than 24 hours.
+- Docker is NOT available in the task execution environment. You MUST deploy the app to Encore Cloud.
+- To deploy the app to Encore Cloud:
+  1. Run `git init` in your project folder.
+  2. Authenticate Encore by writing the provided `ENCORE_AUTH_TOKEN_JSON` value to `~/.config/encore/.auth_token`: `mkdir -p ~/.config/encore && printf '%s' "$ENCORE_AUTH_TOKEN_JSON" > ~/.config/encore/.auth_token`
+  3. Verify authentication with `encore auth whoami`.
+  4. Initialize an Encore app: `encore app init cleanup-app --lang go`.
+  5. Add the remote: `git remote add encore encore://<app-id>` (app-id can be found in `encore.app`).
+  6. Commit and push: `git add -A . && git commit -m "Initial" && git push encore`.
+
+## Acceptance Criteria
+- Project path: /home/user/cleanup-app
+- The app must be successfully deployed to Encore Cloud.
+- API Endpoints (accessible via `https://staging-<app-id>.encr.app`):
+  - `POST /records`: Accepts JSON `{"id": string, "data": string, "created_at": string}` (RFC3339 format) and inserts the record.
+  - `GET /records`: Returns a JSON object containing an array of records (e.g., `{"records": [{"id": string, "data": string, "created_at": string}]}`).
+  - `POST /cleanup`: Deletes records where `created_at` is older than 24 hours from the current time.
+
+b:Taea,# Encore.ts Cron Job and Database Cleanup
+
+## Background
+Encore is a backend framework that provides declarative infrastructure. In this task, you will create an Encore.ts application with a PostgreSQL database and a cron job that periodically cleans up stale records.
+
+## Requirements
+- Create an Encore.ts application. The app name MUST be `cron-app-${run-id}`, where `${run-id}` is read from the `ZEALT_RUN_ID` environment variable.
+- Create a PostgreSQL database named `records_db`.
+- Create a `records` table with `id` (serial primary key), `data` (text), and `created_at` (timestamp, defaults to now).
+- Implement the following API endpoints in a service named `cleanup`:
+  - `POST /records`: Accepts a JSON body with `data` (string) and an optional `created_at` (ISO string). Inserts a new record. If `created_at` is provided, use it; otherwise, use the current time. Returns the inserted record's `id`.
+  - `GET /records`: Returns a JSON array of all records, ordered by `id`.
+  - `POST /cleanup`: Deletes all records where `created_at` is older than 1 hour from the current time. Returns the number of deleted records.
+- Define a Cron Job named `cleanup-job` that calls the `POST /cleanup` endpoint every 1 hour (`every: "1h"`).
+- Deploy the application to Encore Cloud.
+
+## Implementation Hints
+- Read the current `run-id` from the `ZEALT_RUN_ID` environment variable.
+- Use `encore app init cron-app-${run-id} --lang ts` to initialize the project.
+- Use `encore.dev/storage/sqldb` for the database.
+- Use `encore.dev/cron` to define the cron job.
+- To deploy to Encore Cloud:
+  1. Initialize a Git repository (`git init`).
+  2. Authenticate Encore by writing the provided `ENCORE_AUTH_TOKEN_JSON` value to `~/.config/encore/.auth_token`:
+     `mkdir -p ~/.config/encore && printf '%s' "$ENCORE_AUTH_TOKEN_JSON" > ~/.config/encore/.auth_token`
+  3. Add the Encore Git remote: `git remote add encore encore://<app-id>` (extract the app ID from `encore.app`).
+  4. Push to deploy: `git push encore`
+- Wait for the deployment to finish before completing the task. The deployment takes about 2 minutes.
+
+## Acceptance Criteria
+- Project path: /home/user/cron-app-${run-id}
+- Ensure the application is deployed to Encore Cloud.
+- The Encore app name must be `cron-app-${run-id}` where `run-id` is read from the `ZEALT_RUN_ID` environment variable.
+- API Endpoints (accessible at `https://staging-<app-id>.encr.app`):
+  - `POST /records`:
+    - Request: `{"data": "test", "created_at": "2020-01-01T00:00:00Z"}`
+    - Response: `{"id": number}`
+  - `GET /records`:
+    - Response: `[{"id": number, "data": "string", "created_at": "string"}]`
+  - `POST /cleanup`:
+    - Response: `{"deleted_count": number}`
+- The `POST /cleanup` endpoint must successfully delete records older than 1 hour.
+
+c:Tb26,# Custom Auth Handler in Encore Go
+
+## Background
+Encore provides a built-in authentication system using the `//encore:authhandler` annotation. In this task, you will create an Encore Go application that implements a custom authentication handler and a protected API endpoint, and then deploy it to Encore Cloud.
+
+## Requirements
+- Create an Encore Go app with two packages: `auth` and `dashboard`.
+- In the `auth` package, implement an authentication handler that validates an incoming token.
+- The auth handler should accept a token. If the token equals `secret-token`, it should return an `auth.UID` of `user-123` and custom auth data containing `Role: "admin"`.
+- If the token is invalid or missing, the auth handler should return an error with the `Unauthenticated` error code.
+- In the `dashboard` package, create a protected API endpoint `GET /dashboard`.
+- The endpoint must require authentication.
+- The endpoint should read the authenticated user's ID and custom data from the context, and return a response message.
+- Deploy the application to Encore Cloud.
+- Write the deployed app's App ID to a log file.
+
+## Implementation Hints
+- Docker is NOT available in this environment, so `encore run` will not work. You must deploy the app to Encore Cloud for testing.
+- Use `encore app init <app-name>` to initialize the project.
+- To authenticate with Encore Cloud, read the `ENCORE_AUTH_TOKEN_JSON` environment variable and write it to `~/.config/encore/.auth_token`. Then run `encore auth whoami`.
+- To deploy to Encore Cloud:
+  1. Run `git init`.
+  2. Add the Encore Git remote: `git remote add encore encore://<app-id>`.
+  3. Commit your code and run `git push encore`.
+- The deployed endpoint will be available at `https://staging-<app-id>.encr.app/`.
+- Write the app ID to `/home/user/myproject/output.log`.
+- Define the auth handler in the `auth` package using the `//encore:authhandler` annotation. It should return `(auth.UID, *YourCustomData, error)`.
+- For the protected endpoint in the `dashboard` package, use the `//encore:api auth` annotation.
+- Inside the protected endpoint, use `auth.UserID()` and `auth.Data()` to access the authenticated user's ID and custom data.
+
+## Acceptance Criteria
+- Project path: /home/user/myproject
+- Ensure the app is deployed to Encore Cloud and the log artifact exists.
+- Log file: /home/user/myproject/output.log
+- The log file must contain the App ID in the format: `App ID: <app_id>`.
+- The deployed API endpoint `GET https://staging-<app_id>.encr.app/dashboard` must require authentication.
+  - If no token or invalid token is provided, returns HTTP 401 Unauthorized.
+  - If the `Authorization` header is `Bearer secret-token`, it should return HTTP 200 OK.
+  - The successful JSON response must be exactly:
+    ```json
+    {
+      "message": "Hello user-123, you are an admin"
+    }
+    ```
+
+d:T97e,# Custom Authentication in Encore.ts
+
+## Background
+Encore is a backend framework for building type-safe distributed systems. In this task, you will create an Encore app and implement custom authentication middleware using Encore's `authHandler` pattern to protect an API endpoint.
+
+## Requirements
+- Create an Encore.ts app named `customauth`.
+- Implement a custom authentication handler that checks the `Authorization` header for a Bearer token.
+- If the token is `secret-token`, the auth handler should successfully authenticate and provide a user object with `userID: "user-123"`.
+- If the token is missing or invalid, the auth handler should reject the request.
+- Create a protected API endpoint `GET /dashboard` that requires authentication.
+- The endpoint should return a welcome message including the authenticated user's ID.
+- You MUST deploy the application to Encore Cloud for testing.
+
+## Implementation Hints
+- Use Encore's `authHandler` from `encore.dev/auth` to define the custom authentication logic.
+- In your API definition for `/dashboard`, set `auth: true` to enforce authentication.
+- Read the `ENCORE_AUTH_TOKEN_JSON` environment variable to authenticate the Encore CLI.
+- **Deployment Guide**:
+  1. Run `git init` in your project folder.
+  2. Authenticate Encore: `mkdir -p ~/.config/encore && printf '%s' "$ENCORE_AUTH_TOKEN_JSON" > ~/.config/encore/.auth_token`.
+  3. Initialize the app: `encore app init customauth --lang ts`.
+  4. Find your App ID in the `encore.app` file.
+  5. Add the Git remote: `git remote add encore encore://<app-id>`.
+  6. Commit and push: `git add -A . && git commit -m 'Initial commit' && git push encore`.
+  7. The deployment takes about 2 minutes. The deployed endpoint will be accessible at `https://staging-<app-id>.encr.app/`.
+
+## Acceptance Criteria
+- Project path: /home/user/customauth
+- Ensure the app is deployed to Encore Cloud.
+- The verifier will test against the deployed endpoint `https://staging-<app-id>.encr.app`.
+- API Endpoints:
+  - GET `/dashboard`:
+    - When called without an `Authorization` header, returns a 401 Unauthorized status.
+    - When called with `Authorization: Bearer wrong-token`, returns a 401 Unauthorized status.
+    - When called with `Authorization: Bearer secret-token`, returns a 200 OK status and the following JSON response format:
+      ```json
+      {
+        "message": "Welcome to the dashboard, user-123!"
+      }
+      ```
+
+e:T85f,# Event-Driven Architecture with Encore and Go
+
+## Background
+Create an event-driven architecture with a publisher service and a subscriber service using Encore and Go, and deploy it to Encore Cloud.
+
+## Requirements
+- Create a Go-based Encore app.
+- Implement a publisher service with a REST API endpoint `POST /publish` that accepts a JSON body containing a `message` string.
+- The publisher service must publish the message to an Encore Pub/Sub topic.
+- Implement a subscriber service that subscribes to the topic and stores the received messages in an Encore SQL Database.
+- Implement a REST API endpoint `GET /messages` that returns a list of all received messages from the database.
+- Deploy the app to Encore Cloud.
+
+## Implementation Hints
+- Use Encore's built-in Pub/Sub primitives to define a topic and a subscription.
+- Use Encore's SQL database primitive to provision a database and store the messages.
+- Ensure you read the `run-id` from the `ZEALT_RUN_ID` environment variable and use it if you need to name any globally unique resources, though Encore Cloud app IDs are typically unique enough.
+- **Deployment Guide**:
+  1. Initialize a Git repository with `git init`.
+  2. Authenticate using the provided `ENCORE_AUTH_TOKEN_JSON` environment variable:
+     `mkdir -p ~/.config/encore && printf '%s' "$ENCORE_AUTH_TOKEN_JSON" > ~/.config/encore/.auth_token`
+  3. Initialize the app with `encore app init <app-name> --lang go`. (Remove `encore.app` first if it already exists).
+  4. Add the git remote: `git remote add encore encore://<app-id>`. (You can get the app ID from the `encore.app` file).
+  5. Commit your code and deploy with `git push encore`.
+
+## Acceptance Criteria
+- Project path: /home/user/eda-app
+- Ensure the real deployment action is executed and the app is accessible on Encore Cloud.
+- The verifier will test the deployed endpoint at `https://staging-<app-id>.encr.app/`.
+- API Endpoints (deployed):
+  - POST `/publish`: Accepts JSON `{"message": string}` and returns 200 OK.
+  - GET `/messages`: Returns 200 OK and a JSON object containing a list of messages, e.g., `{"messages": [{"message": string}]}`.
+
+f:T9eb,# Event-Driven Architecture with Encore.ts
+
+## Background
+Encore is a backend framework that uses a declarative "Infrastructure from Code" approach. You will build an event-driven application using Encore's built-in Pub/Sub primitives and PostgreSQL database, and deploy it to Encore Cloud.
+
+## Requirements
+- Create an Encore TypeScript application named `eda_app`.
+- Implement a `publisher` service that exposes a REST API to publish messages to a Pub/Sub topic.
+- Implement a `subscriber` service that subscribes to the topic and stores received messages in a PostgreSQL database.
+- The `subscriber` service must expose a REST API to retrieve the stored messages.
+- Deploy the application to Encore Cloud.
+
+## Implementation Hints
+- Create an Encore app using `encore app init eda_app --lang ts`.
+- In the `publisher` service, define a Topic and an API endpoint `POST /publish` that accepts a JSON body `{"text": string}` and publishes it to the Topic.
+- In the `subscriber` service, define an `SQLDatabase` and a Subscription to the publisher's Topic. When an event is received, insert the `text` into the database.
+- In the `subscriber` service, define an API endpoint `GET /messages` that returns all stored messages from the database as a JSON array.
+- **Authentication**: Write the provided `ENCORE_AUTH_TOKEN_JSON` environment variable to `~/.config/encore/.auth_token` to authenticate the Encore CLI.
+- **Deployment**: Docker is NOT available in this environment, so you cannot use `encore run`. You MUST deploy the app to Encore Cloud to test it.
+  - To deploy:
+    1. Initialize a Git repository (`git init`).
+    2. Authenticate Encore.
+    3. Remove `encore.app` if it exists, then run `encore app init eda_app --lang ts`.
+    4. Extract the app ID from the `encore.app` file.
+    5. Add the remote: `git remote add encore encore://<app-id>`.
+    6. Commit your code and push: `git push encore`.
+    7. The deployed API will be available at `https://staging-<app-id>.encr.app`.
+
+## Acceptance Criteria
+- Project path: `/home/user/eda_app`
+- Ensure the app is deployed to Encore Cloud.
+- The deployed app must have a `POST /publish` endpoint that accepts `{"text": "<message>"}`.
+- The deployed app must have a `GET /messages` endpoint that returns a JSON object containing a list of messages, e.g., `{"messages": [{"text": "<message>"}]}`.
+- The app must use Encore's Pub/Sub (Topic and Subscription) to pass the message from the publisher to the subscriber.
+- The app must use Encore's `SQLDatabase` to store the messages.
+
+10:T844,# Migrate Express.js to Encore.ts
+
+## Background
+Encore is an open-source backend framework for building type-safe distributed systems. You have an existing Express.js application at `/home/user/express-app`. You have been tasked with migrating it to Encore.ts and deploying the new application to Encore Cloud.
+
+## Requirements
+- Initialize a new Encore.ts application named `helloworld` at `/home/user/helloworld`.
+- Implement a single API endpoint that replicates the behavior of the Express.js endpoint from `/home/user/express-app/index.js` (`GET /greet/:name` which returns `{"message": "Hello, <name>!"}`).
+- Deploy the application to Encore Cloud.
+- Write the deployed App ID to a log file.
+
+## Implementation Hints
+- Use `encore app init helloworld --lang ts` to initialize the app in the home directory.
+- Define the API endpoint using `api` from `encore.dev/api` with `method: "GET"` and `path: "/greet/:name"`.
+- To deploy to Encore Cloud, follow these steps in `/home/user/helloworld`:
+  1. Run `git init`.
+  2. Authenticate Encore by writing the provided `ENCORE_AUTH_TOKEN_JSON` environment variable to `~/.config/encore/.auth_token`:
+     `mkdir -p ~/.config/encore && printf '%s' "$ENCORE_AUTH_TOKEN_JSON" > ~/.config/encore/.auth_token`
+  3. Run `encore auth whoami` to confirm authentication.
+  4. Get the app ID (e.g., from the `encore.app` file).
+  5. Add the Encore Git remote: `git remote add encore encore://<app-id>`.
+  6. Commit your code and push to deploy: `git add . && git commit -m "deploy" && git push encore`.
+- The deployment may take about 2 minutes to complete.
+- Write the App ID to `/home/user/helloworld/app_id.log` in the format `App ID: <app_id>`.
+
+## Acceptance Criteria
+- Project path: /home/user/helloworld
+- Ensure the app is deployed to Encore Cloud.
+- Log file: /home/user/helloworld/app_id.log
+- The log file must contain the App ID in the format: `App ID: <app_id>`.
+- The deployed endpoint must be accessible at `https://staging-<app_id>.encr.app/greet/:name`.
+- A GET request to the deployed endpoint must return a JSON response with the correct greeting message.
+
+11:T8bf,# Migrate a Gin Application to Encore (Go)
+
+## Background
+You have an existing simple Go application built with the Gin framework. To simplify infrastructure management, you need to migrate this application to the Encore backend framework and deploy it to Encore Cloud.
+
+## Requirements
+- Initialize an Encore app using Go in the project directory.
+- Use the app name `ginmigrate-${run-id}` to ensure uniqueness.
+- Implement the following API endpoints using Encore's declarative approach (migrated from the original Gin app):
+  - `GET /hello/:name`: Returns a JSON object with a `message` field containing `Hello, <name>!`.
+  - `GET /ping`: Returns a JSON object with a `message` field containing `pong`.
+- Deploy the migrated application to Encore Cloud.
+
+## Implementation Hints
+- Read the current `run-id` from the `ZEALT_RUN_ID` environment variable.
+- Define APIs in Go using the `//encore:api public path=...` annotation.
+- Ensure your Go structs use JSON tags (e.g., ``json:"message"``) to match the required response format.
+- **IMPORTANT**: Docker is NOT available in the task execution environment. You MUST deploy the app to Encore Cloud for verification.
+- Here is a simple guide to deploy an Encore app to Encore Cloud:
+  1. Initialize a Git repository (`git init`).
+  2. Authenticate Encore by writing the provided `ENCORE_AUTH_TOKEN_JSON` value to `~/.config/encore/.auth_token` (`mkdir -p ~/.config/encore && printf '%s' "$ENCORE_AUTH_TOKEN_JSON" > ~/.config/encore/.auth_token`).
+  3. Initialize the Encore app: `encore app init ginmigrate-${run-id} --lang go`.
+  4. Add the Encore Git remote: `git remote add encore encore://<app-id>` (extract `<app-id>` from `encore.app`).
+  5. Commit your code and push to the Encore remote: `git add -A . && git commit -m 'Deploy' && git push encore`.
+
+## Acceptance Criteria
+- Project path: /home/user/myproject
+- Ensure the app is deployed to Encore Cloud.
+- The app ID must be readable from `/home/user/myproject/encore.app`.
+- The deployed endpoint `https://staging-<app-id>.encr.app/hello/:name` must return HTTP 200 and JSON `{"message": "Hello, <name>!"}`.
+- The deployed endpoint `https://staging-<app-id>.encr.app/ping` must return HTTP 200 and JSON `{"message": "pong"}`.
+
+12:T86f,# Multi-Service API with Encore in Go
+
+## Background
+Create a multi-service application in Go using the Encore framework. The application should consist of two services that communicate with each other, demonstrating Encore's service-to-service API call capabilities.
+
+## Requirements
+- Create an Encore application in Go.
+- Implement a `user` service with an endpoint `GET /user/:id` that returns a user object.
+- Implement an `order` service with an endpoint `GET /order/:id` that returns an order object.
+- The `order` service must make a service-to-service call to the `user` service to fetch the user details and include them in its response.
+- Deploy the application to Encore Cloud.
+
+## Implementation Hints
+- Use `encore app init` to create the application.
+- Define the `user` service with an exported API function.
+- Define the `order` service that imports the `user` service package and calls its API function directly as a normal Go function call (Encore handles the networking).
+- You must deploy the app to Encore Cloud since local execution via Docker is not available in this environment.
+- **Authentication**: Write the provided `ENCORE_AUTH_TOKEN_JSON` environment variable to `~/.config/encore/.auth_token` to authenticate with Encore.
+- **Deployment Guide**:
+  1. `git init`
+  2. `mkdir -p ~/.config/encore && printf '%s' "$ENCORE_AUTH_TOKEN_JSON" > ~/.config/encore/.auth_token`
+  3. `encore app init myapp --lang go` (or similar)
+  4. Get the app ID from `encore.app`.
+  5. `git remote add encore encore://<app-id>`
+  6. `git add . && git commit -m "deploy" && git push encore`
+  7. Wait for deployment to finish.
+
+## Acceptance Criteria
+- Project path: /home/user/myproject
+- Ensure the app is deployed to Encore Cloud.
+- The application must have a `user` service and an `order` service.
+- API Endpoints (deployed to `https://staging-<app-id>.encr.app`):
+  - GET `/user/:id`: Returns status 200 and a JSON object with `id` (string) and `name` (string).
+  - GET `/order/:id`: Returns status 200 and a JSON object with `id` (string), `user_id` (string), and `user_name` (string). It must fetch the user details from the `user` service.
+
+13:T9ba,# Multi-Service API with Encore.ts
+
+## Background
+Encore makes it easy to build distributed systems by automatically handling service-to-service communication. In this task, you will create a multi-service Encore application in TypeScript and deploy it to Encore Cloud.
+
+## Requirements
+- Create an Encore application named `myapp`.
+- Create a `user` service with an API endpoint `GET /user/:id` that returns a user object `{"id": number, "name": string}`. For simplicity, if the ID is 1, return the name "Alice", otherwise return "Unknown".
+- Create an `order` service with an API endpoint `GET /order/:id` that returns an order object `{"orderId": number, "userId": number, "userName": string}`.
+- The `order` service must call the `user` service internally to fetch the `userName`. For simplicity, hardcode the `order` endpoint to always fetch the user with ID 1.
+- Deploy the application to Encore Cloud.
+- Write the app ID to a log file.
+
+## Implementation Hints
+- Initialize the Encore app using `encore app init myapp --lang ts`.
+- Define the two services by creating `user/encore.service.ts` and `order/encore.service.ts`.
+- In Encore, service-to-service calls are strongly typed and done using the generated service clients. Import the user service client in the order service (e.g., `import { user } from "~encore/clients"`).
+- **IMPORTANT**: Docker is NOT available in the task execution environment. Commands like `encore run` will fail. You MUST deploy the app to Encore Cloud to test it.
+- To authenticate with Encore Cloud, write the provided `ENCORE_AUTH_TOKEN_JSON` environment variable to `~/.config/encore/.auth_token`:
+  `mkdir -p ~/.config/encore && printf '%s' "$ENCORE_AUTH_TOKEN_JSON" > ~/.config/encore/.auth_token`
+- To deploy the app to Encore Cloud:
+  1. `git init`
+  2. `git remote add encore encore://<app-id>`
+  3. `git add -A .`
+  4. `git commit -m "Deploy"`
+  5. `git push encore`
+- You can find the app ID in the `encore.app` file after initialization.
+
+## Acceptance Criteria
+- Project path: /home/user/myapp
+- Ensure the app is deployed to Encore Cloud.
+- Log file: /home/user/myapp/deploy.log
+- The log file must contain the app ID in the format: `App ID: <app-id>`.
+- The deployed API must have the following endpoints accessible at `https://staging-<app-id>.encr.app`:
+  - `GET /user/1`: Returns status 200 and JSON `{"id": 1, "name": "Alice"}`.
+  - `GET /order/100`: Returns status 200 and JSON `{"orderId": 100, "userId": 1, "userName": "Alice"}`.
+
+14:Tb1a,# Encore REST API with PostgreSQL in Go
+
+## Background
+Create a REST API with a PostgreSQL database for managing a list of tasks (To-Do items) using Encore and Go, and deploy it to Encore Cloud.
+
+## Requirements
+- Initialize a new Encore application named `taskmanager` using Go.
+- Create a service named `task` with a PostgreSQL database named `taskdb`.
+- Implement a RESTful API with the following endpoints in the `task` service:
+  - POST `/tasks`: Create a new task (fields: `title`, `description`). The task should default to `done: false`.
+  - GET `/tasks`: List all tasks.
+  - GET `/tasks/:id`: Get a single task by its integer ID.
+  - PUT `/tasks/:id`: Update a task's `title`, `description`, and `done` status.
+  - DELETE `/tasks/:id`: Delete a task by ID.
+- Add a database migration file to create the `tasks` table with columns `id` (serial primary key), `title` (text), `description` (text), and `done` (boolean).
+- Deploy the application to Encore Cloud.
+
+## Implementation Hints
+- Read the `ENCORE_AUTH_TOKEN_JSON` environment variable to authenticate with Encore Cloud.
+- A simple guide to deploy an Encore app to Encore Cloud:
+  1. Run `mkdir -p ~/.config/encore && printf '%s' "$ENCORE_AUTH_TOKEN_JSON" > ~/.config/encore/.auth_token`.
+  2. Run `encore auth whoami` to confirm authentication.
+  3. Initialize an Encore app: `encore app init taskmanager --lang go`.
+  4. Go into the app directory: `cd taskmanager`.
+  5. Initialize a Git repository: `git init`.
+  6. Add the Encore Git remote: `git remote add encore encore://<app-id>` (extract `<app-id>` from the `encore.app` file).
+  7. Commit your code: `git add . && git commit -m "initial"`.
+  8. Push to the Encore remote and wait for deployment: `git push encore`.
+- Use `encore.dev/storage/sqldb` to define the database and query it.
+- The task executor is expected to deploy the app to Encore Cloud. Docker is NOT available in the task execution environment, so `encore run` will not work.
+
+## Acceptance Criteria
+- Project path: /home/user/taskmanager
+- Ensure the application is successfully deployed to Encore Cloud.
+- The API endpoints must be accessible at the deployed endpoint: `https://staging-<app-id>.encr.app`.
+- API Endpoints:
+  - POST `/tasks`: Accepts JSON `{"title": string, "description": string}` and returns 200 OK with the created task JSON `{"id": number, "title": string, "description": string, "done": boolean}`.
+  - GET `/tasks`: Returns 200 OK and a JSON object containing an array of tasks: `{"tasks": [{"id": number, "title": string, "description": string, "done": boolean}]}`.
+  - GET `/tasks/:id`: Returns 200 OK with the task JSON.
+  - PUT `/tasks/:id`: Accepts JSON `{"title": string, "description": string, "done": boolean}` and returns 200 OK with the updated task JSON.
+  - DELETE `/tasks/:id`: Deletes the task and returns 200 OK.
+
+15:T882,# Create a REST API with PostgreSQL using Encore.ts
+
+## Background
+Encore is an open-source backend framework for building type-safe distributed systems with automatic infrastructure provisioning. In this task, you will create a REST API with a PostgreSQL database and deploy it to Encore Cloud.
+
+## Requirements
+- Initialize a new Encore application named `helloworld` using TypeScript.
+- Implement a REST API for managing users with the following endpoints:
+  - POST `/users`: Create a new user (fields: `name`, `email`).
+  - GET `/users/:id`: Get a user by ID.
+  - GET `/users`: List all users.
+- Use Encore's built-in PostgreSQL database primitive (`SQLDatabase`) to store the users.
+- Deploy the app to Encore Cloud.
+
+## Implementation Hints
+- The task executor is expected to deploy the app to Encore Cloud. Docker is NOT available in the task execution environment.
+- To deploy an Encore app to Encore Cloud:
+  1. Initialize a Git repository with `git init`.
+  2. Authenticate Encore by writing the provided `ENCORE_AUTH_TOKEN_JSON` environment variable value to `~/.config/encore/.auth_token`.
+     `mkdir -p ~/.config/encore && printf '%s' "$ENCORE_AUTH_TOKEN_JSON" > ~/.config/encore/.auth_token`
+  3. Verify with `encore auth whoami`.
+  4. Remove `encore.app` first if it already exists.
+  5. Initialize the app using `encore app init helloworld --lang ts`.
+  6. Add the Encore Git remote: `git remote add encore encore://<app-id>` (extract `<app-id>` from the output or `encore.app`).
+  7. Push to the Encore remote: `git push encore`.
+- Use `encore.dev/api` to define API endpoints.
+- Use `encore.dev/storage/sqldb` to define the PostgreSQL database.
+- Create a `migrations` folder with a SQL migration file to create the `users` table.
+
+## Acceptance Criteria
+- Project path: /home/user/helloworld
+- Ensure the app is deployed to Encore Cloud.
+- The deployed API should be accessible at `https://staging-<app-id>.encr.app`.
+- API Endpoints:
+  - POST `/users`: Accepts `name` and `email`, returns the created user object including an `id`.
+  - GET `/users/:id`: Returns the user object for the given ID.
+  - GET `/users`: Returns a JSON array of all user objects.
+
+16:T926,# Encore REST API with PostgreSQL
+
+## Background
+Encore is a backend framework for building type-safe distributed systems with declarative infrastructure. In this task, you will build a REST API using Encore.ts with a PostgreSQL database and deploy it to Encore Cloud.
+
+## Requirements
+- Create a new Encore.ts app named `helloworld-${run-id}` where `run-id` is read from the `ZEALT_RUN_ID` environment variable.
+- Implement a REST API with CRUD operations for "books" (fields: `id`, `title`, `author`).
+  - POST `/book`: Add a new book.
+  - GET `/book/:id`: Get a book by ID.
+  - GET `/book`: List all books.
+- Store data using Encore's built-in `SQLDatabase` (PostgreSQL).
+- Deploy the app to Encore Cloud. The task executor must deploy the app to Encore Cloud for testing since Docker is NOT available in the execution environment.
+
+## Implementation Hints
+1. Authenticate with Encore using the provided `ENCORE_AUTH_TOKEN_JSON`. Run `mkdir -p ~/.config/encore && printf '%s' "$ENCORE_AUTH_TOKEN_JSON" > ~/.config/encore/.auth_token` and verify with `encore auth whoami`.
+2. Read the current `run-id` from the `ZEALT_RUN_ID` environment variable.
+3. Create the app using `encore app init helloworld-${run-id} --lang ts`.
+4. Use `SQLDatabase` from `encore.dev/storage/sqldb` for the database and create a migration file in a `migrations` folder (e.g. `1_create_tables.up.sql`).
+5. Implement the API endpoints using `api` from `encore.dev/api`.
+6. Deploy to Encore Cloud:
+   - Navigate into the app directory.
+   - Extract the App ID from `encore.app`.
+   - Add the remote: `git remote add encore encore://<app-id>`.
+   - Commit and push: `git add -A . && git commit -m "init" && git push encore`.
+
+## Acceptance Criteria
+- Project path: /home/user/helloworld-${run-id}
+- Ensure the real app deployment is executed and the app is deployed to Encore Cloud.
+- The deployed endpoint must be accessible at `https://staging-<app-id>.encr.app/` (where `<app-id>` is the Encore App ID from `encore.app`).
+- API Endpoints (all accessible via the deployed URL):
+  - POST `/book`: Accepts JSON `{"title": string, "author": string}` and returns `{"id": number, "title": string, "author": string}`.
+  - GET `/book/:id`: Returns the book object `{"id": number, "title": string, "author": string}`.
+  - GET `/book`: Returns a JSON array of book objects.
+
+17:T61e,# Serve Static Assets with Encore.ts
+
+## Background
+Create an Encore.ts application that serves static assets (HTML, CSS) using the `api.static` function.
+
+## Requirements
+- Initialize an Encore.ts application in `/home/user/myproject`.
+- Create a service that serves static files from a `public` directory.
+- The `public` directory should contain an `index.html` with the text "Hello Static World" and a `style.css`.
+- Deploy the application to Encore Cloud.
+
+## Implementation Hints
+- Use `api.static` from `encore.dev/api` to serve the `public` directory.
+- Docker is NOT available in the task execution environment. You MUST deploy the app to Encore Cloud for testing.
+- Use the `ENCORE_AUTH_TOKEN_JSON` environment variable to authenticate with Encore Cloud.
+- Deployment Guide:
+  1. `git init`
+  2. `mkdir -p ~/.config/encore && printf '%s' "$ENCORE_AUTH_TOKEN_JSON" > ~/.config/encore/.auth_token`
+  3. `encore auth whoami`
+  4. `encore app init myproject --lang ts`
+  5. `git remote add encore encore://<app-id>`
+  6. `git add -A . && git commit -m "init" && git push encore`
+
+## Acceptance Criteria
+- Project path: `/home/user/myproject`
+- Ensure the app is deployed to Encore Cloud.
+- The `encore.app` file must exist in `/home/user/myproject`.
+- The deployed app must serve the static assets.
+- The endpoint `https://staging-<app-id>.encr.app/` (or `https://staging-<app-id>.encr.app/index.html`) must return the `index.html` containing "Hello Static World".
+- The endpoint `https://staging-<app-id>.encr.app/style.css` must return the `style.css` file.
+
+18:T898,# Todo List API with Encore.ts and PostgreSQL
+
+## Background
+Create a REST API for managing a Todo list using Encore.ts and its built-in PostgreSQL database support. Deploy the API to Encore Cloud.
+
+## Requirements
+- Implement an Encore.ts service with a PostgreSQL database named `todos`.
+- The database schema must include a table for todos with at least `id`, `title` (text), and `done` (boolean).
+- Implement the following RESTful API endpoints:
+  - POST `/todos`: Create a new todo.
+  - GET `/todos`: List all todos.
+  - PUT `/todos/:id`: Update a todo's `title` and/or `done` status.
+  - DELETE `/todos/:id`: Delete a todo by ID.
+- Deploy the application to Encore Cloud.
+
+## Implementation Hints
+- Use `encore.dev/storage/sqldb` to define the PostgreSQL database.
+- Use `encore.dev/api` to define the endpoints.
+- To deploy an Encore app to Encore Cloud:
+  1. Initialize a Git repository: `git init`.
+  2. Authenticate Encore by writing the provided `ENCORE_AUTH_TOKEN_JSON` value to `~/.config/encore/.auth_token`, then verify with `encore auth whoami`.
+  3. Initialize an Encore app: `encore app init mytodo --lang ts` (remove `encore.app` first if it already exists).
+  4. Add the Encore Git remote: `git remote add encore encore://<app-id>` (extract `<app-id>` from `encore.app`).
+  5. Push to the Encore remote and wait for deployment: `git push encore`.
+- Docker is NOT available in the task execution environment, so you cannot run `encore run` locally. You must deploy to Encore Cloud and test against the deployed endpoint.
+
+## Acceptance Criteria
+- Project path: /home/user/mytodo
+- Ensure the app is deployed to Encore Cloud and the real action is executed.
+- The `encore.app` file must exist in the project directory and contain the app ID.
+- API Endpoints (accessible at `https://staging-<app-id>.encr.app`):
+  - POST `/todos`: Accepts JSON `{"title": string, "done": boolean}` and returns 200/201 with the created todo object (including an `id`).
+  - GET `/todos`: Returns 200 with a JSON array of todo objects.
+  - PUT `/todos/:id`: Accepts JSON `{"title": string, "done": boolean}` and returns 200.
+  - DELETE `/todos/:id`: Deletes the todo with the given ID and returns 200.
+
+19:Tb6a,# Uptime Monitor with Encore.ts
+
+## Background
+Create an uptime monitor backend using Encore.ts. This application will use Encore's built-in PostgreSQL databases and Pub/Sub primitives to manage a list of websites, asynchronously check their status, and store the results. The application must be deployed to Encore Cloud.
+
+## Requirements
+- Create an Encore.ts app named `uptime`.
+- Implement a `monitor` service with the following endpoints:
+  - `POST /site`: Add a new website to monitor (fields: `url`).
+  - `GET /site`: List all monitored websites and their current status.
+  - `POST /check`: Manually trigger a check for all monitored websites.
+- The application must use an Encore PostgreSQL database to store the sites (fields: `id` (integer/serial), `url` (text), `is_up` (boolean)).
+- When `POST /check` is called, it should fetch all sites from the database and publish a message for each site to an Encore Pub/Sub topic.
+- Implement a Pub/Sub subscriber that listens to the topic, performs an HTTP GET request to the site's `url`, and updates the `is_up` status in the database (true if status code is 200-299, false otherwise).
+- Deploy the application to Encore Cloud.
+
+## Implementation Hints
+- Use `SQLDatabase` from `encore.dev/storage/sqldb` for the database.
+- Use `Topic` and `Subscription` from `encore.dev/pubsub` for the event-driven checking mechanism.
+- To make HTTP requests in the subscriber, you can use the native `fetch` API.
+- You must deploy the app to Encore Cloud for testing. Local Docker is NOT available in the task execution environment.
+- **How to deploy to Encore Cloud:**
+  1. Initialize a Git repository (`git init`).
+  2. Authenticate Encore by writing the provided `ENCORE_AUTH_TOKEN_JSON` environment variable to `~/.config/encore/.auth_token` (e.g., `mkdir -p ~/.config/encore && printf '%s' "$ENCORE_AUTH_TOKEN_JSON" > ~/.config/encore/.auth_token`).
+  3. Verify authentication with `encore auth whoami`.
+  4. Initialize the app: `encore app init uptime --lang ts`.
+  5. Get the app ID from the output or `encore.app` file.
+  6. Add the Git remote: `git remote add encore encore://<app-id>`.
+  7. Push to deploy: `git push encore`.
+
+## Acceptance Criteria
+- Project path: /home/user/uptime
+- The application must be deployed to Encore Cloud.
+- The verifier will test against the deployed endpoint: `https://staging-<app-id>.encr.app` (The app ID will be extracted from `/home/user/uptime/encore.app`).
+- API Endpoints:
+  - `POST /site`: Accepts JSON `{"url": string}` and returns `{"id": number, "url": string, "is_up": boolean}`.
+  - `GET /site`: Returns `{"sites": [{"id": number, "url": string, "is_up": boolean}]}`.
+  - `POST /check`: Triggers the Pub/Sub workflow and returns status 200 (or 202) with an empty body or success message.
+- The Pub/Sub subscriber must successfully update the `is_up` status in the database based on the HTTP response of the monitored URL.
+
+1a:T8d7,# URL Shortener REST API with Encore.ts
+
+## Background
+Create a URL Shortener REST API using Encore.ts and its built-in PostgreSQL database provisioning. The API will allow users to submit a long URL and receive a shortened ID, and then retrieve the original URL using that ID.
+
+## Requirements
+- Implement a RESTful API with the following endpoints:
+  - POST `/url`: Shorten a URL. Accepts a JSON body with a `url` string. Generates a unique short ID (e.g., a random string) and stores it in the database.
+  - GET `/url/:id`: Retrieve the original URL by its short ID.
+- Use Encore's `SQLDatabase` to store the URL mappings.
+- Provide a database migration file to create the necessary table.
+- The application must be deployed to Encore Cloud.
+
+## Implementation Hints
+- Use `api` from `encore.dev/api` to define the endpoints.
+- Use `SQLDatabase` from `encore.dev/storage/sqldb` to define the database.
+- Create a `migrations` directory with a SQL file (e.g., `1_create_tables.up.sql`) to define the table schema.
+- To deploy an Encore app to Encore Cloud:
+  1. Initialize a Git repository (`git init`).
+  2. Authenticate Encore by writing the provided `ENCORE_AUTH_TOKEN_JSON` value to `~/.config/encore/.auth_token`: `mkdir -p ~/.config/encore && printf '%s' "$ENCORE_AUTH_TOKEN_JSON" > ~/.config/encore/.auth_token`.
+  3. Verify authentication with `encore auth whoami`.
+  4. Initialize an Encore app (e.g., `encore app init myapp --lang ts`).
+  5. Add the Encore Git remote: `git remote add encore encore://<app-id>`.
+  6. Commit your code and push to the Encore remote: `git push encore`.
+  7. The deployed endpoint will be available at `https://staging-<app-id>.encr.app/`.
+
+## Acceptance Criteria
+- Project path: /home/user/url-shortener
+- Start command: The app must be deployed to Encore Cloud via `git push encore`.
+- Port: N/A (Deployed to Encore Cloud)
+- API Endpoints:
+  - POST `/url`: Accepts a URL and returns the created short ID.
+
+    ```json
+    // Request
+    {
+      "url": string
+    }
+    ```
+    ```json
+    // Response
+    {
+      "id": string,
+      "url": string
+    }
+    ```
+
+  - GET `/url/:id`: Returns the URL object for the given short ID.
+
+    ```json
+    // Response
+    {
+      "id": string,
+      "url": string
+    }
+    ```
+
+0:{"buildId":"d6NjAWQg8QanFpCzOvL2l","rsc":["$","$1","c",{"children":[["$","div",null,{"className":"min-h-screen bg-background text-foreground font-sans selection:bg-primary/20","children":[["$","div",null,{"className":"fixed inset-0 -z-10 h-full w-full bg-background bg-[radial-gradient(#2a2a2a_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-20 dark:opacity-40"}],["$","$2",null,{"fallback":["$","div",null,{"className":"container mx-auto py-8 text-center","children":"Loading tasks..."}],"children":["$","$L3",null,{"tasksData":[{"taskName":"book_store_api_ts","instruction":"$4","trials":[{"job_name":"2026-05-30__14-09-34","trial_name":"book_store_api_ts__LZHt7Rj","model":"glm-5.1","rawModel":"zai/glm-5.1","agent":"Pochi","passed":false,"reward":0,"error":true,"latency_sec":1404.594,"latency_breakdown":{"env_setup":159.295,"agent_setup":20.101,"agent_exec":1200.194,"verifier":1.889},"taskName":"book_store_api_ts","jobId":"LZHt7Rj","exec_duration":1200.194},{"job_name":"2026-05-30__14-09-34","trial_name":"book_store_api_ts__shdycN5","model":"gpt-5.2-codex","rawModel":"openai/gpt-5.2-codex","agent":"Pochi","passed":false,"reward":0,"error":false,"latency_sec":795.416,"latency_breakdown":{"env_setup":137.575,"agent_setup":21.47,"agent_exec":618.267,"verifier":0.961},"taskName":"book_store_api_ts","jobId":"shdycN5","exec_duration":618.267},{"job_name":"2026-05-30__14-09-34","trial_name":"book_store_api_ts__7YR37y4","model":"gemini-3.1-pro","rawModel":"google/gemini-3.1-pro","agent":"Pochi","passed":false,"reward":0,"error":false,"latency_sec":998.969,"latency_breakdown":{"env_setup":99.825,"agent_setup":25.602,"agent_exec":847.948,"verifier":1.262},"taskName":"book_store_api_ts","jobId":"7YR37y4","exec_duration":847.948}]},{"taskName":"create_graphql_api_ts","instruction":"$5","trials":[{"job_name":"2026-05-30__07-57-35","trial_name":"create_graphql_api_ts__CX9Pmoz","model":"gpt-5.2-codex","rawModel":"openai/gpt-5.2-codex","agent":"Pochi","passed":false,"reward":0,"error":true,"latency_sec":1245.54,"latency_breakdown":{"env_setup":7.863,"agent_setup":19.283,"agent_exec":1200.182,"verifier":1.242},"taskName":"create_graphql_api_ts","jobId":"CX9Pmoz","exec_duration":1200.182},{"job_name":"2026-05-30__07-57-35","trial_name":"create_graphql_api_ts__hYkzipx","model":"glm-5.1","rawModel":"zai/glm-5.1","agent":"Pochi","passed":false,"reward":0,"error":true,"latency_sec":1270.198,"latency_breakdown":{"env_setup":30.976,"agent_setup":20.363,"agent_exec":1200.176,"verifier":1.564},"taskName":"create_graphql_api_ts","jobId":"hYkzipx","exec_duration":1200.176},{"job_name":"2026-05-30__07-57-35","trial_name":"create_graphql_api_ts__xswBAwV","model":"gemini-3.1-pro","rawModel":"google/gemini-3.1-pro","agent":"Pochi","passed":true,"reward":1,"error":false,"latency_sec":349.088,"latency_breakdown":{"env_setup":41.79,"agent_setup":19.84,"agent_exec":267.638,"verifier":2.05},"taskName":"create_graphql_api_ts","jobId":"xswBAwV","exec_duration":267.638}]},{"taskName":"create_hello_world_go","instruction":"$6","trials":[{"job_name":"2026-05-30__07-57-35","trial_name":"create_hello_world_go__JgjZKCG","model":"gpt-5.2-codex","rawModel":"openai/gpt-5.2-codex","agent":"Pochi","passed":true,"reward":1,"error":false,"latency_sec":384.626,"latency_breakdown":{"env_setup":49.742,"agent_setup":19.652,"agent_exec":294.54,"verifier":1.819},"taskName":"create_hello_world_go","jobId":"JgjZKCG","exec_duration":294.54},{"job_name":"2026-05-30__07-57-35","trial_name":"create_hello_world_go__epZzEFw","model":"glm-5.1","rawModel":"zai/glm-5.1","agent":"Pochi","passed":false,"reward":0,"error":false,"latency_sec":945.503,"latency_breakdown":{"env_setup":43.949,"agent_setup":19.726,"agent_exec":862.908,"verifier":0.825},"taskName":"create_hello_world_go","jobId":"epZzEFw","exec_duration":862.908},{"job_name":"2026-05-30__07-57-35","trial_name":"create_hello_world_go__PiD3Kd2","model":"gemini-3.1-pro","rawModel":"google/gemini-3.1-pro","agent":"Pochi","passed":true,"reward":1,"error":false,"latency_sec":457.86,"latency_breakdown":{"env_setup":43.922,"agent_setup":21.345,"agent_exec":368.127,"verifier":2.04},"taskName":"create_hello_world_go","jobId":"PiD3Kd2","exec_duration":368.127}]},{"taskName":"create_hello_world_ts","instruction":"$7","trials":[{"job_name":"2026-05-30__06-41-34","trial_name":"create_hello_world_ts__wVAF7k9","model":"gpt-5.2-codex","rawModel":"openai/gpt-5.2-codex","agent":"Pochi","passed":false,"reward":0,"error":false,"latency_sec":447.026,"latency_breakdown":{"env_setup":154.735,"agent_setup":21.238,"agent_exec":252.075,"verifier":1.482},"taskName":"create_hello_world_ts","jobId":"wVAF7k9","exec_duration":252.075},{"job_name":"2026-05-30__06-41-34","trial_name":"create_hello_world_ts__6Zw7Z2Y","model":"gemini-3.1-pro","rawModel":"google/gemini-3.1-pro","agent":"Pochi","passed":true,"reward":1,"error":false,"latency_sec":667.72,"latency_breakdown":{"env_setup":103.369,"agent_setup":20.118,"agent_exec":523.157,"verifier":2.202},"taskName":"create_hello_world_ts","jobId":"6Zw7Z2Y","exec_duration":523.157},{"job_name":"2026-05-30__06-41-34","trial_name":"create_hello_world_ts__rtv3fPY","model":"glm-5.1","rawModel":"zai/glm-5.1","agent":"Pochi","passed":true,"reward":1,"error":false,"latency_sec":1033.744,"latency_breakdown":{"env_setup":11.318,"agent_setup":21.796,"agent_exec":981.711,"verifier":2.087},"taskName":"create_hello_world_ts","jobId":"rtv3fPY","exec_duration":981.711}]},{"taskName":"create_rest_api_go","instruction":"$8","trials":[{"job_name":"2026-05-30__06-41-34","trial_name":"create_rest_api_go__e2dAw62","model":"glm-5.1","rawModel":"zai/glm-5.1","agent":"Pochi","passed":true,"reward":1,"error":false,"latency_sec":1229.234,"latency_breakdown":{"env_setup":178.214,"agent_setup":20.074,"agent_exec":1012.786,"verifier":2.16},"taskName":"create_rest_api_go","jobId":"e2dAw62","exec_duration":1012.786},{"job_name":"2026-05-30__06-41-34","trial_name":"create_rest_api_go__rbUiV5x","model":"gpt-5.2-codex","rawModel":"openai/gpt-5.2-codex","agent":"Pochi","passed":false,"reward":0,"error":false,"latency_sec":406.119,"latency_breakdown":{"env_setup":154.684,"agent_setup":22.182,"agent_exec":214.522,"verifier":1.389},"taskName":"create_rest_api_go","jobId":"rbUiV5x","exec_duration":214.522},{"job_name":"2026-05-30__06-41-34","trial_name":"create_rest_api_go__N7PChFf","model":"gemini-3.1-pro","rawModel":"google/gemini-3.1-pro","agent":"Pochi","passed":true,"reward":1,"error":false,"latency_sec":645.517,"latency_breakdown":{"env_setup":104.069,"agent_setup":20.922,"agent_exec":498.814,"verifier":3.289},"taskName":"create_rest_api_go","jobId":"N7PChFf","exec_duration":498.814}]},{"taskName":"create_rest_api_ts","instruction":"$9","trials":[{"job_name":"2026-05-30__06-41-34","trial_name":"create_rest_api_ts__AzfiBVT","model":"gemini-3.1-pro","rawModel":"google/gemini-3.1-pro","agent":"Pochi","passed":false,"reward":0,"error":true,"latency_sec":1342.221,"latency_breakdown":{"env_setup":102.744,"agent_setup":21.233,"agent_exec":1200.191,"verifier":0.987},"taskName":"create_rest_api_ts","jobId":"AzfiBVT","exec_duration":1200.191},{"job_name":"2026-05-30__06-41-34","trial_name":"create_rest_api_ts__ZLxvNMS","model":"gpt-5.2-codex","rawModel":"openai/gpt-5.2-codex","agent":"Pochi","passed":false,"reward":0,"error":false,"latency_sec":576.061,"latency_breakdown":{"env_setup":152.598,"agent_setup":22.894,"agent_exec":381.244,"verifier":1.328},"taskName":"create_rest_api_ts","jobId":"ZLxvNMS","exec_duration":381.244},{"job_name":"2026-05-30__06-41-34","trial_name":"create_rest_api_ts__UjYe49W","model":"glm-5.1","rawModel":"zai/glm-5.1","agent":"Pochi","passed":false,"reward":0,"error":true,"latency_sec":1419.755,"latency_breakdown":{"env_setup":179.64,"agent_setup":20.312,"agent_exec":1200.208,"verifier":2.286},"taskName":"create_rest_api_ts","jobId":"UjYe49W","exec_duration":1200.208}]},{"taskName":"cron_job_cleanup_go","instruction":"$a","trials":[{"job_name":"2026-05-30__07-57-35","trial_name":"cron_job_cleanup_go__4gPkNog","model":"gemini-3.1-pro","rawModel":"google/gemini-3.1-pro","agent":"Pochi","passed":true,"reward":1,"error":false,"latency_sec":510.56,"latency_breakdown":{"env_setup":40.656,"agent_setup":21.531,"agent_exec":426.069,"verifier":2.752},"taskName":"cron_job_cleanup_go","jobId":"4gPkNog","exec_duration":426.069},{"job_name":"2026-05-30__07-57-35","trial_name":"cron_job_cleanup_go__qMCgLXY","model":"glm-5.1","rawModel":"zai/glm-5.1","agent":"Pochi","passed":false,"reward":0,"error":true,"latency_sec":1301.839,"latency_breakdown":{"env_setup":63.629,"agent_setup":20.512,"agent_exec":1200.209,"verifier":1.898},"taskName":"cron_job_cleanup_go","jobId":"qMCgLXY","exec_duration":1200.209},{"job_name":"2026-05-30__07-57-35","trial_name":"cron_job_cleanup_go__nCsAvB6","model":"gpt-5.2-codex","rawModel":"openai/gpt-5.2-codex","agent":"Pochi","passed":false,"reward":0,"error":false,"latency_sec":264.119,"latency_breakdown":{"env_setup":21.011,"agent_setup":19.843,"agent_exec":205.767,"verifier":0.831},"taskName":"cron_job_cleanup_go","jobId":"nCsAvB6","exec_duration":205.767}]},{"taskName":"cron_job_cleanup_ts","instruction":"$b","trials":[{"job_name":"2026-05-30__07-57-35","trial_name":"cron_job_cleanup_ts__cjRXXLC","model":"gpt-5.2-codex","rawModel":"openai/gpt-5.2-codex","agent":"Pochi","passed":false,"reward":0,"error":true,"latency_sec":1269.622,"latency_breakdown":{"env_setup":27.141,"agent_setup":20.634,"agent_exec":1200.203,"verifier":1.072},"taskName":"cron_job_cleanup_ts","jobId":"cjRXXLC","exec_duration":1200.203},{"job_name":"2026-05-30__07-57-35","trial_name":"cron_job_cleanup_ts__boHAwMx","model":"glm-5.1","rawModel":"zai/glm-5.1","agent":"Pochi","passed":false,"reward":0,"error":true,"latency_sec":1273.246,"latency_breakdown":{"env_setup":35.707,"agent_setup":19.864,"agent_exec":1200.203,"verifier":1.299},"taskName":"cron_job_cleanup_ts","jobId":"boHAwMx","exec_duration":1200.203},{"job_name":"2026-05-30__07-57-35","trial_name":"cron_job_cleanup_ts__2Qhk9Hc","model":"gemini-3.1-pro","rawModel":"google/gemini-3.1-pro","agent":"Pochi","passed":true,"reward":1,"error":false,"latency_sec":572.583,"latency_breakdown":{"env_setup":13.67,"agent_setup":20.788,"agent_exec":516.32,"verifier":3.899},"taskName":"cron_job_cleanup_ts","jobId":"2Qhk9Hc","exec_duration":516.32}]},{"taskName":"custom_auth_handler_go","instruction":"$c","trials":[{"job_name":"2026-05-30__14-09-34","trial_name":"custom_auth_handler_go__USE4Gka","model":"glm-5.1","rawModel":"zai/glm-5.1","agent":"Pochi","passed":true,"reward":1,"error":false,"latency_sec":983.318,"latency_breakdown":{"env_setup":22.842,"agent_setup":19.96,"agent_exec":920.516,"verifier":2.271},"taskName":"custom_auth_handler_go","jobId":"USE4Gka","exec_duration":920.516},{"job_name":"2026-05-30__14-09-34","trial_name":"custom_auth_handler_go__UjA46Sn","model":"gpt-5.2-codex","rawModel":"openai/gpt-5.2-codex","agent":"Pochi","passed":false,"reward":0,"error":false,"latency_sec":481.774,"latency_breakdown":{"env_setup":26.546,"agent_setup":19.9,"agent_exec":419.12,"verifier":1.765},"taskName":"custom_auth_handler_go","jobId":"UjA46Sn","exec_duration":419.12},{"job_name":"2026-05-30__14-09-34","trial_name":"custom_auth_handler_go__38P3Cuz","model":"gemini-3.1-pro","rawModel":"google/gemini-3.1-pro","agent":"Pochi","passed":true,"reward":1,"error":false,"latency_sec":426.296,"latency_breakdown":{"env_setup":15.022,"agent_setup":21.905,"agent_exec":364.819,"verifier":2.68},"taskName":"custom_auth_handler_go","jobId":"38P3Cuz","exec_duration":364.819}]},{"taskName":"custom_auth_middleware_ts","instruction":"$d","trials":[{"job_name":"2026-05-30__14-09-34","trial_name":"custom_auth_middleware_ts__7AxEwQt","model":"glm-5.1","rawModel":"zai/glm-5.1","agent":"Pochi","passed":false,"reward":0,"error":true,"latency_sec":1279.808,"latency_breakdown":{"env_setup":36.423,"agent_setup":22.033,"agent_exec":1200.195,"verifier":1.791},"taskName":"custom_auth_middleware_ts","jobId":"7AxEwQt","exec_duration":1200.195},{"job_name":"2026-05-30__14-09-34","trial_name":"custom_auth_middleware_ts__ogDiKyS","model":"gemini-3.1-pro","rawModel":"google/gemini-3.1-pro","agent":"Pochi","passed":true,"reward":1,"error":false,"latency_sec":668.003,"latency_breakdown":{"env_setup":111.242,"agent_setup":21.527,"agent_exec":514.412,"verifier":2.615},"taskName":"custom_auth_middleware_ts","jobId":"ogDiKyS","exec_duration":514.412},{"job_name":"2026-05-30__14-09-34","trial_name":"custom_auth_middleware_ts__Kr3sLps","model":"gpt-5.2-codex","rawModel":"openai/gpt-5.2-codex","agent":"Pochi","passed":false,"reward":0,"error":false,"latency_sec":384.904,"latency_breakdown":{"env_setup":135.583,"agent_setup":21.144,"agent_exec":211.405,"verifier":1.793},"taskName":"custom_auth_middleware_ts","jobId":"Kr3sLps","exec_duration":211.405}]},{"taskName":"event_driven_architecture_go","instruction":"$e","trials":[{"job_name":"2026-05-30__07-57-35","trial_name":"event_driven_architecture_go__zHpL79p","model":"glm-5.1","rawModel":"zai/glm-5.1","agent":"Pochi","passed":false,"reward":0,"error":true,"latency_sec":1298.948,"latency_breakdown":{"env_setup":43.662,"agent_setup":20.234,"agent_exec":1200.192,"verifier":6.425},"taskName":"event_driven_architecture_go","jobId":"zHpL79p","exec_duration":1200.192},{"job_name":"2026-05-30__07-57-35","trial_name":"event_driven_architecture_go__kJrn9DH","model":"gemini-3.1-pro","rawModel":"google/gemini-3.1-pro","agent":"Pochi","passed":false,"reward":0,"error":true,"latency_sec":143.984,"latency_breakdown":{"env_setup":96.04,"agent_setup":19.191,"agent_exec":5.342,"verifier":0.904},"taskName":"event_driven_architecture_go","jobId":"kJrn9DH","exec_duration":5.342},{"job_name":"2026-05-30__07-57-35","trial_name":"event_driven_architecture_go__qVKgeZR","model":"gpt-5.2-codex","rawModel":"openai/gpt-5.2-codex","agent":"Pochi","passed":false,"reward":0,"error":false,"latency_sec":313.223,"latency_breakdown":{"env_setup":130.54,"agent_setup":20.961,"agent_exec":140.993,"verifier":6.656},"taskName":"event_driven_architecture_go","jobId":"qVKgeZR","exec_duration":140.993}]},{"taskName":"event_driven_architecture_ts","instruction":"$f","trials":[{"job_name":"2026-05-30__07-57-35","trial_name":"event_driven_architecture_ts__9UUqjtM","model":"gemini-3.1-pro","rawModel":"google/gemini-3.1-pro","agent":"Pochi","passed":false,"reward":0,"error":false,"latency_sec":1272.737,"latency_breakdown":{"env_setup":57.433,"agent_setup":20.987,"agent_exec":1176.026,"verifier":1.22},"taskName":"event_driven_architecture_ts","jobId":"9UUqjtM","exec_duration":1176.026},{"job_name":"2026-05-30__07-57-35","trial_name":"event_driven_architecture_ts__6uuSaPX","model":"gpt-5.2-codex","rawModel":"openai/gpt-5.2-codex","agent":"Pochi","passed":false,"reward":0,"error":false,"latency_sec":294.927,"latency_breakdown":{"env_setup":23.976,"agent_setup":19.173,"agent_exec":233.238,"verifier":1.332},"taskName":"event_driven_architecture_ts","jobId":"6uuSaPX","exec_duration":233.238},{"job_name":"2026-05-30__07-57-35","trial_name":"event_driven_architecture_ts__CWNEXq7","model":"glm-5.1","rawModel":"zai/glm-5.1","agent":"Pochi","passed":false,"reward":0,"error":true,"latency_sec":1274.912,"latency_breakdown":{"env_setup":37.063,"agent_setup":20.188,"agent_exec":1200.198,"verifier":1.043},"taskName":"event_driven_architecture_ts","jobId":"CWNEXq7","exec_duration":1200.198}]},{"taskName":"migrate_express_ts","instruction":"$10","trials":[{"job_name":"2026-05-30__07-57-35","trial_name":"migrate_express_ts__DJJg6q4","model":"gpt-5.2-codex","rawModel":"openai/gpt-5.2-codex","agent":"Pochi","passed":true,"reward":1,"error":false,"latency_sec":450.63,"latency_breakdown":{"env_setup":23.577,"agent_setup":20.027,"agent_exec":385.06,"verifier":1.764},"taskName":"migrate_express_ts","jobId":"DJJg6q4","exec_duration":385.06},{"job_name":"2026-05-30__07-57-35","trial_name":"migrate_express_ts__4EK7YQ5","model":"gemini-3.1-pro","rawModel":"google/gemini-3.1-pro","agent":"Pochi","passed":true,"reward":1,"error":false,"latency_sec":363.455,"latency_breakdown":{"env_setup":42.999,"agent_setup":20.067,"agent_exec":276.389,"verifier":2.2},"taskName":"migrate_express_ts","jobId":"4EK7YQ5","exec_duration":276.389},{"job_name":"2026-05-30__07-57-35","trial_name":"migrate_express_ts__NkiY7V9","model":"glm-5.1","rawModel":"zai/glm-5.1","agent":"Pochi","passed":false,"reward":0,"error":true,"latency_sec":1267.612,"latency_breakdown":{"env_setup":23.933,"agent_setup":21.095,"agent_exec":1200.192,"verifier":2.198},"taskName":"migrate_express_ts","jobId":"NkiY7V9","exec_duration":1200.192}]},{"taskName":"migrate_gin_go","instruction":"$11","trials":[{"job_name":"2026-05-30__07-57-35","trial_name":"migrate_gin_go__Zzmttsz","model":"gemini-3.1-pro","rawModel":"google/gemini-3.1-pro","agent":"Pochi","passed":true,"reward":1,"error":false,"latency_sec":612.898,"latency_breakdown":{"env_setup":47.561,"agent_setup":21.812,"agent_exec":523.925,"verifier":2.018},"taskName":"migrate_gin_go","jobId":"Zzmttsz","exec_duration":523.925},{"job_name":"2026-05-30__07-57-35","trial_name":"migrate_gin_go__dPtMA9V","model":"glm-5.1","rawModel":"zai/glm-5.1","agent":"Pochi","passed":true,"reward":1,"error":false,"latency_sec":408.899,"latency_breakdown":{"env_setup":21.599,"agent_setup":20.656,"agent_exec":340.905,"verifier":2.378},"taskName":"migrate_gin_go","jobId":"dPtMA9V","exec_duration":340.905},{"job_name":"2026-05-30__07-57-35","trial_name":"migrate_gin_go__NdGSX9Y","model":"gpt-5.2-codex","rawModel":"openai/gpt-5.2-codex","agent":"Pochi","passed":false,"reward":0,"error":false,"latency_sec":140.712,"latency_breakdown":{"env_setup":15.867,"agent_setup":19.528,"agent_exec":86.646,"verifier":1.522},"taskName":"migrate_gin_go","jobId":"NdGSX9Y","exec_duration":86.646}]},{"taskName":"multi_service_api_go","instruction":"$12","trials":[{"job_name":"2026-05-30__07-57-35","trial_name":"multi_service_api_go__SxvAWhk","model":"glm-5.1","rawModel":"zai/glm-5.1","agent":"Pochi","passed":false,"reward":0,"error":false,"latency_sec":1140.726,"latency_breakdown":{"env_setup":136.114,"agent_setup":21.162,"agent_exec":964.401,"verifier":1.987},"taskName":"multi_service_api_go","jobId":"SxvAWhk","exec_duration":964.401},{"job_name":"2026-05-30__07-57-35","trial_name":"multi_service_api_go__cWcV5rF","model":"gpt-5.2-codex","rawModel":"openai/gpt-5.2-codex","agent":"Pochi","passed":false,"reward":0,"error":false,"latency_sec":334.065,"latency_breakdown":{"env_setup":135.368,"agent_setup":21.801,"agent_exec":159.203,"verifier":1.762},"taskName":"multi_service_api_go","jobId":"cWcV5rF","exec_duration":159.203},{"job_name":"2026-05-30__07-57-35","trial_name":"multi_service_api_go__AYsLB6z","model":"gemini-3.1-pro","rawModel":"google/gemini-3.1-pro","agent":"Pochi","passed":true,"reward":1,"error":false,"latency_sec":477.563,"latency_breakdown":{"env_setup":90.085,"agent_setup":21.804,"agent_exec":344.652,"verifier":1.974},"taskName":"multi_service_api_go","jobId":"AYsLB6z","exec_duration":344.652}]},{"taskName":"multi_service_api_ts","instruction":"$13","trials":[{"job_name":"2026-05-30__07-57-35","trial_name":"multi_service_api_ts__pDQ9QJy","model":"gpt-5.2-codex","rawModel":"openai/gpt-5.2-codex","agent":"Pochi","passed":false,"reward":0,"error":false,"latency_sec":1275.291,"latency_breakdown":{"env_setup":129.739,"agent_setup":22.041,"agent_exec":1098.882,"verifier":1.264},"taskName":"multi_service_api_ts","jobId":"pDQ9QJy","exec_duration":1098.882},{"job_name":"2026-05-30__07-57-35","trial_name":"multi_service_api_ts__efof5d2","model":"gemini-3.1-pro","rawModel":"google/gemini-3.1-pro","agent":"Pochi","passed":true,"reward":1,"error":false,"latency_sec":1041.027,"latency_breakdown":{"env_setup":96.534,"agent_setup":21.063,"agent_exec":905.329,"verifier":1.889},"taskName":"multi_service_api_ts","jobId":"efof5d2","exec_duration":905.329},{"job_name":"2026-05-30__07-57-35","trial_name":"multi_service_api_ts__c4bJtwd","model":"glm-5.1","rawModel":"zai/glm-5.1","agent":"Pochi","passed":false,"reward":0,"error":true,"latency_sec":1386.537,"latency_breakdown":{"env_setup":149.273,"agent_setup":20.532,"agent_exec":1200.196,"verifier":2.259},"taskName":"multi_service_api_ts","jobId":"c4bJtwd","exec_duration":1200.196}]},{"taskName":"rest_api_postgres_go","instruction":"$14","trials":[{"job_name":"2026-05-30__14-09-34","trial_name":"rest_api_postgres_go__3nTdvwR","model":"glm-5.1","rawModel":"zai/glm-5.1","agent":"Pochi","passed":true,"reward":1,"error":false,"latency_sec":980.933,"latency_breakdown":{"env_setup":33.721,"agent_setup":22.888,"agent_exec":903.494,"verifier":4.789},"taskName":"rest_api_postgres_go","jobId":"3nTdvwR","exec_duration":903.494},{"job_name":"2026-05-30__14-09-34","trial_name":"rest_api_postgres_go__weVUsfr","model":"gemini-3.1-pro","rawModel":"google/gemini-3.1-pro","agent":"Pochi","passed":true,"reward":1,"error":false,"latency_sec":603.746,"latency_breakdown":{"env_setup":59.226,"agent_setup":19.628,"agent_exec":495.167,"verifier":4.18},"taskName":"rest_api_postgres_go","jobId":"weVUsfr","exec_duration":495.167},{"job_name":"2026-05-30__14-09-34","trial_name":"rest_api_postgres_go__Cke2rap","model":"gpt-5.2-codex","rawModel":"openai/gpt-5.2-codex","agent":"Pochi","passed":false,"reward":0,"error":false,"latency_sec":211.434,"latency_breakdown":{"env_setup":17.051,"agent_setup":20.945,"agent_exec":153.545,"verifier":1.306},"taskName":"rest_api_postgres_go","jobId":"Cke2rap","exec_duration":153.545}]},{"taskName":"rest_api_postgres_ts","instruction":"$15","trials":[{"job_name":"2026-05-30__14-09-34","trial_name":"rest_api_postgres_ts__udJQvKp","model":"gpt-5.2-codex","rawModel":"openai/gpt-5.2-codex","agent":"Pochi","passed":false,"reward":0,"error":false,"latency_sec":234.398,"latency_breakdown":{"env_setup":40.868,"agent_setup":20.362,"agent_exec":151.725,"verifier":1.376},"taskName":"rest_api_postgres_ts","jobId":"udJQvKp","exec_duration":151.725},{"job_name":"2026-05-30__14-09-34","trial_name":"rest_api_postgres_ts__TdNaFmj","model":"glm-5.1","rawModel":"zai/glm-5.1","agent":"Pochi","passed":false,"reward":0,"error":true,"latency_sec":1313.116,"latency_breakdown":{"env_setup":73.578,"agent_setup":21.724,"agent_exec":1200.188,"verifier":0.95},"taskName":"rest_api_postgres_ts","jobId":"TdNaFmj","exec_duration":1200.188},{"job_name":"2026-05-30__14-09-34","trial_name":"rest_api_postgres_ts__u37pRSu","model":"gemini-3.1-pro","rawModel":"google/gemini-3.1-pro","agent":"Pochi","passed":false,"reward":0,"error":false,"latency_sec":874.417,"latency_breakdown":{"env_setup":23.143,"agent_setup":21.073,"agent_exec":808.849,"verifier":1.189},"taskName":"rest_api_postgres_ts","jobId":"u37pRSu","exec_duration":808.849}]},{"taskName":"rest_api_ts","instruction":"$16","trials":[{"job_name":"2026-05-30__14-09-34","trial_name":"rest_api_ts__H9nVDPV","model":"gpt-5.2-codex","rawModel":"openai/gpt-5.2-codex","agent":"Pochi","passed":false,"reward":0,"error":false,"latency_sec":419.797,"latency_breakdown":{"env_setup":67.359,"agent_setup":19.514,"agent_exec":314.294,"verifier":1.307},"taskName":"rest_api_ts","jobId":"H9nVDPV","exec_duration":314.294},{"job_name":"2026-05-30__14-09-34","trial_name":"rest_api_ts__tpEEaJC","model":"gemini-3.1-pro","rawModel":"google/gemini-3.1-pro","agent":"Pochi","passed":false,"reward":0,"error":true,"latency_sec":1269.507,"latency_breakdown":{"env_setup":25.409,"agent_setup":19.719,"agent_exec":1200.204,"verifier":1.059},"taskName":"rest_api_ts","jobId":"tpEEaJC","exec_duration":1200.204},{"job_name":"2026-05-30__14-09-34","trial_name":"rest_api_ts__8KRti7L","model":"glm-5.1","rawModel":"zai/glm-5.1","agent":"Pochi","passed":false,"reward":0,"error":true,"latency_sec":1317.173,"latency_breakdown":{"env_setup":75.619,"agent_setup":20.2,"agent_exec":1200.194,"verifier":1.886},"taskName":"rest_api_ts","jobId":"8KRti7L","exec_duration":1200.194}]},{"taskName":"serve_static_assets_ts","instruction":"$17","trials":[{"job_name":"2026-05-30__14-09-34","trial_name":"serve_static_assets_ts__jCG3PVj","model":"glm-5.1","rawModel":"zai/glm-5.1","agent":"Pochi","passed":false,"reward":0,"error":true,"latency_sec":1259.158,"latency_breakdown":{"env_setup":18.475,"agent_setup":22.959,"agent_exec":1200.194,"verifier":1.677},"taskName":"serve_static_assets_ts","jobId":"jCG3PVj","exec_duration":1200.194},{"job_name":"2026-05-30__14-09-34","trial_name":"serve_static_assets_ts__FKi3NTu","model":"gpt-5.2-codex","rawModel":"openai/gpt-5.2-codex","agent":"Pochi","passed":true,"reward":1,"error":false,"latency_sec":623.509,"latency_breakdown":{"env_setup":55.202,"agent_setup":21.473,"agent_exec":524.885,"verifier":1.672},"taskName":"serve_static_assets_ts","jobId":"FKi3NTu","exec_duration":524.885},{"job_name":"2026-05-30__14-09-34","trial_name":"serve_static_assets_ts__YWcRiWU","model":"gemini-3.1-pro","rawModel":"google/gemini-3.1-pro","agent":"Pochi","passed":true,"reward":1,"error":false,"latency_sec":1159.577,"latency_breakdown":{"env_setup":32.503,"agent_setup":20.783,"agent_exec":1085.569,"verifier":2.036},"taskName":"serve_static_assets_ts","jobId":"YWcRiWU","exec_duration":1085.569}]},{"taskName":"todo_list_api_ts","instruction":"$18","trials":[{"job_name":"2026-05-30__14-09-34","trial_name":"todo_list_api_ts__w3jUjbs","model":"gpt-5.2-codex","rawModel":"openai/gpt-5.2-codex","agent":"Pochi","passed":false,"reward":0,"error":false,"latency_sec":112.095,"latency_breakdown":{"env_setup":42.574,"agent_setup":21.039,"agent_exec":33.416,"verifier":0.813},"taskName":"todo_list_api_ts","jobId":"w3jUjbs","exec_duration":33.416},{"job_name":"2026-05-30__14-09-34","trial_name":"todo_list_api_ts__Va3f76D","model":"gemini-3.1-pro","rawModel":"google/gemini-3.1-pro","agent":"Pochi","passed":true,"reward":1,"error":false,"latency_sec":963.328,"latency_breakdown":{"env_setup":14.688,"agent_setup":19.953,"agent_exec":906.433,"verifier":3.992},"taskName":"todo_list_api_ts","jobId":"Va3f76D","exec_duration":906.433},{"job_name":"2026-05-30__14-09-34","trial_name":"todo_list_api_ts__BYmvqPc","model":"glm-5.1","rawModel":"zai/glm-5.1","agent":"Pochi","passed":false,"reward":0,"error":true,"latency_sec":1260.093,"latency_breakdown":{"env_setup":18.297,"agent_setup":20.033,"agent_exec":1200.179,"verifier":0.788},"taskName":"todo_list_api_ts","jobId":"BYmvqPc","exec_duration":1200.179}]},{"taskName":"uptime_monitor_ts","instruction":"$19","trials":[{"job_name":"2026-05-30__14-09-34","trial_name":"uptime_monitor_ts__MxfF3b4","model":"gpt-5.2-codex","rawModel":"openai/gpt-5.2-codex","agent":"Pochi","passed":false,"reward":0,"error":false,"latency_sec":326.311,"latency_breakdown":{"env_setup":137.324,"agent_setup":21.625,"agent_exec":147.589,"verifier":1.567},"taskName":"uptime_monitor_ts","jobId":"MxfF3b4","exec_duration":147.589},{"job_name":"2026-05-30__14-09-34","trial_name":"uptime_monitor_ts__MbefG9g","model":"gemini-3.1-pro","rawModel":"google/gemini-3.1-pro","agent":"Pochi","passed":true,"reward":1,"error":false,"latency_sec":718.326,"latency_breakdown":{"env_setup":112.934,"agent_setup":22.175,"agent_exec":545.461,"verifier":18.693},"taskName":"uptime_monitor_ts","jobId":"MbefG9g","exec_duration":545.461},{"job_name":"2026-05-30__14-09-34","trial_name":"uptime_monitor_ts__eg8UGgY","model":"glm-5.1","rawModel":"zai/glm-5.1","agent":"Pochi","passed":false,"reward":0,"error":true,"latency_sec":1403.071,"latency_breakdown":{"env_setup":159.149,"agent_setup":19.899,"agent_exec":1200.212,"verifier":1.562},"taskName":"uptime_monitor_ts","jobId":"eg8UGgY","exec_duration":1200.212}]},{"taskName":"url_shortener_ts","instruction":"$1a","trials":[{"job_name":"2026-05-30__14-09-34","trial_name":"url_shortener_ts__mLythox","model":"glm-5.1","rawModel":"zai/glm-5.1","agent":"Pochi","passed":false,"reward":null,"error":true,"latency_sec":82.501,"latency_breakdown":{"env_setup":44.111,"agent_setup":20.414,"agent_exec":0.739,"verifier":null},"taskName":"url_shortener_ts","jobId":"mLythox","exec_duration":0.739},{"job_name":"2026-05-30__14-09-34","trial_name":"url_shortener_ts__7XeEsYK","model":"gpt-5.2-codex","rawModel":"openai/gpt-5.2-codex","agent":"Pochi","passed":false,"reward":null,"error":true,"latency_sec":86.403,"latency_breakdown":{"env_setup":38.897,"agent_setup":21.241,"agent_exec":0.776,"verifier":null},"taskName":"url_shortener_ts","jobId":"7XeEsYK","exec_duration":0.776},{"job_name":"2026-05-30__14-09-34","trial_name":"url_shortener_ts__risgud9","model":"gemini-3.1-pro","rawModel":"google/gemini-3.1-pro","agent":"Pochi","passed":false,"reward":null,"error":true,"latency_sec":68.096,"latency_breakdown":{"env_setup":23.993,"agent_setup":20.801,"agent_exec":0.83,"verifier":null},"taskName":"url_shortener_ts","jobId":"risgud9","exec_duration":0.83}]}]}]}]]}],["$L1b","$L1c"],"$L1d"]}],"loading":null,"isPartial":false}
+1b:["$","script","script-0",{"src":"/encore-benchmark/pr-preview/pr-3/_next/static/chunks/3d160a83c03a9356.js","async":true}]
+1c:["$","script","script-1",{"src":"/encore-benchmark/pr-preview/pr-3/_next/static/chunks/f9f579c42c486944.js","async":true}]
+1d:["$","$L1e",null,{"children":["$","$2",null,{"name":"Next.MetadataOutlet","children":"$@1f"}]}]
+1f:null
