@@ -1,5 +1,0 @@
-CREATE TABLE messages (
-	id BIGSERIAL PRIMARY KEY,
-	message TEXT NOT NULL,
-	received_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
